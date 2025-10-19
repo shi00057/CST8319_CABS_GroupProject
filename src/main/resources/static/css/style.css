@@ -1,0 +1,199 @@
+:root {
+    --bg: #f7f7fb;
+    --fg: #222;
+    --muted: #666;
+    --primary: #3b82f6;
+    --primary-ink: #ffffff;
+    --surface: #ffffff;
+    --border: #e5e7eb;
+    --radius: 12px;
+    --shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+header nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .75rem 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+header nav a {
+    text-decoration: none;
+    color: var(--fg);
+    padding: .5rem .75rem;
+    border-radius: 10px;
+    transition: background .2s ease, color .2s ease;
+}
+
+header nav a:hover {
+    background: #eef2ff;
+}
+
+header nav form {
+    margin-left: auto;
+}
+
+header nav form button {
+    appearance: none;
+    border: 0;
+    background: var(--primary);
+    color: var(--primary-ink);
+    padding: .5rem .9rem;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+main {
+    max-width: 1040px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+h1, h2, h3 {
+    margin: 0 0 .75rem 0;
+    line-height: 1.25;
+}
+
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; color: var(--muted); }
+
+form {
+    display: grid;
+    gap: .75rem;
+    max-width: 720px;
+}
+
+label {
+    display: block;
+    font-size: .9rem;
+    color: var(--muted);
+    margin-bottom: .25rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: .6rem .7rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--fg);
+}
+
+button,
+input[type="submit"] {
+    appearance: none;
+    border: 0;
+    background: var(--primary);
+    color: var(--primary-ink);
+    padding: .6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform .06s ease;
+}
+
+button:active,
+input[type="submit"]:active {
+    transform: translateY(1px);
+}
+
+a.button {
+    display: inline-block;
+    text-decoration: none;
+    background: var(--primary);
+    color: var(--primary-ink);
+    padding: .55rem .9rem;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: .7rem .8rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+table th {
+    background: #f3f4f6;
+    color: #111827;
+    font-weight: 600;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .2rem .45rem;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #111827;
+    font-size: .75rem;
+}
+
+footer {
+    max-width: 1040px;
+    margin: 2rem auto 3rem;
+    padding: 0 1rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0b0d12;
+        --fg: #e5e7eb;
+        --muted: #9ca3af;
+        --surface: #121621;
+        --border: #1f2533;
+        --primary: #60a5fa;
+        --primary-ink: #0b0d12;
+        --shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+    header nav a:hover { background: #1f2533; }
+    table th { background: #1a2030; color: #e5e7eb; }
+    input, select, textarea { background: #0f1320; color: var(--fg); border-color: var(--border); }
+    section { background: var(--surface); }
+}

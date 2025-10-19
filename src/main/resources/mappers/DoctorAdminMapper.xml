@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cabs.repository.DoctorAdminMapper">
+    <select id="listDoctorsBasic" resultType="com.example.cabs.dto.DoctorBasicDto" statementType="CALLABLE">
+        CALL DABS_sp_ListDoctorsBasic()
+    </select>
+    <update id="createDoctor" statementType="CALLABLE">
+        CALL DABS_sp_CreateDoctor(#{p_Email})
+    </update>
+    <update id="updateDoctor" statementType="CALLABLE">
+        CALL DABS_sp_UpdateDoctor(#{p_DoctorId}, #{p_Name})
+    </update>
+    <update id="deleteDoctorSoft" statementType="CALLABLE">
+        CALL DABS_sp_DeleteDoctorSoft(#{p_DoctorId})
+    </update>
+    <select id="getDoctorIdByUserId" resultType="int" statementType="CALLABLE">
+        CALL DABS_sp_GetDoctorIdByUserId(#{p_UserId})
+    </select>
+    <update id="adminGenerateSlots" statementType="CALLABLE">
+        CALL DABS_sp_AdminGenerateSlots(#{p_DoctorId}, #{p_WorkDate}, #{p_StartHour}, #{p_EndHour}, #{p_AdminUserId})
+    </update>
+    <update id="adminGenerateSlotsRange" statementType="CALLABLE">
+        CALL DABS_sp_AdminGenerateSlotsRange(#{p_DoctorId}, #{p_FromDate}, #{p_ToDate}, #{p_StartHour}, #{p_EndHour}, #{p_AdminUserId})
+    </update>
+</mapper>

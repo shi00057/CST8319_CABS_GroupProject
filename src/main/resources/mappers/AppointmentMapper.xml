@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cabs.repository.AppointmentMapper">
+    <update id="bookAppointment" statementType="CALLABLE">
+        CALL DABS_sp_BookAppointment(#{p_DoctorId}, #{p_PatientId}, #{p_StartUtc})
+    </update>
+    <update id="cancelAppointment" statementType="CALLABLE">
+        CALL DABS_sp_CancelAppointment(#{p_ApptId}, #{p_PatientId}, #{p_ByUserId})
+    </update>
+    <select id="listAppointments" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
+        CALL DABS_sp_ListAppointments(#{p_DoctorId}, #{p_PatientId}, #{p_FromUtc})
+    </select>
+    <select id="listAppointmentsByDoctor" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
+        CALL DABS_sp_ListAppointmentsByDoctor(#{p_DoctorId}, #{p_FromUtc})
+    </select>
+    <select id="listAppointmentsByPatient" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
+        CALL DABS_sp_ListAppointmentsByPatient(#{p_PatientId}, #{p_FromUtc})
+    </select>
+</mapper>

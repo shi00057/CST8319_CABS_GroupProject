@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: body">
+<body>
+<section>
+    <h2>Doctors</h2>
+    <form method="get" th:action="@{/doctor/list}">
+        <button type="submit">Load Doctors</button>
+    </form>
+</section>
+</body>
+</html>

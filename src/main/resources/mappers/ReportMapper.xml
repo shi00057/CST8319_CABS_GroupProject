@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cabs.repository.ReportMapper">
+    <select id="reportDoctorAppointments" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
+        CALL DABS_sp_Report_DoctorAppointments(#{p_DoctorId}, #{p_FromUtc})
+    </select>
+    <select id="reportDoctorAppointmentsCsv" resultType="map" statementType="CALLABLE">
+        CALL DABS_sp_Report_DoctorAppointments_Csv(#{p_DoctorId}, #{p_FromUtc})
+    </select>
+    <select id="reportDoctorTotals" resultType="map" statementType="CALLABLE">
+        CALL DABS_sp_Report_DoctorTotals(#{p_DoctorId}, #{p_FromUtc})
+    </select>
+</mapper>

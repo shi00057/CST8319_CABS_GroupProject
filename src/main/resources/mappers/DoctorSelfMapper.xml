@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cabs.repository.DoctorSelfMapper">
+    <update id="doctorGenerateSlots" statementType="CALLABLE">
+        CALL DABS_sp_DoctorGenerateSlots(#{p_DoctorId}, #{p_WorkDate}, #{p_StartHour}, #{p_EndHour}, #{p_ByUserId}, #{p_Source})
+    </update>
+</mapper>

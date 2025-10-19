@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cabs.repository.NotificationMapper">
+    <select id="notificationsCountUnread" resultType="int" statementType="CALLABLE">
+        CALL DABS_sp_Notifications_CountUnread(#{p_UserId})
+    </select>
+    <select id="notificationsListForUser" resultType="com.example.cabs.dto.NotificationDto" statementType="CALLABLE">
+        CALL DABS_sp_Notifications_ListForUser(#{p_UserId}, #{p_OnlyUnread}, #{p_Top})
+    </select>
+    <update id="notificationsMarkRead" statementType="CALLABLE">
+        CALL DABS_sp_Notifications_MarkRead(#{p_UserId}, #{p_NotificationId})
+    </update>
+    <update id="notificationsMarkAll" statementType="CALLABLE">
+        CALL DABS_sp_Notifications_MarkAll(#{p_UserId})
+    </update>
+    <update id="notificationsDelete" statementType="CALLABLE">
+        CALL DABS_sp_Notifications_Delete(#{p_UserId}, #{p_NotificationId})
+    </update>
+    <update id="notifyCreate" statementType="CALLABLE">
+        CALL DABS_sp_Notify_Create(#{p_Type})
+    </update>
+</mapper>

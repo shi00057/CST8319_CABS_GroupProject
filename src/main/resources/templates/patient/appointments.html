@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: body">
+<body>
+<section>
+    <h2>My Appointments</h2>
+    <form method="get" th:action="@{/patient/appointments}">
+        <div>
+            <label>Doctor Id</label>
+            <input type="number" name="doctorId"/>
+        </div>
+        <div>
+            <label>Patient Id</label>
+            <input type="number" name="patientId" required/>
+        </div>
+        <div>
+            <label>From UTC</label>
+            <input type="datetime-local" name="fromUtc" required/>
+        </div>
+        <button type="submit">Query</button>
+    </form>
+</section>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cabs.repository.SlotMapper">
+    <select id="listAvailableSlots" resultType="com.example.cabs.dto.SlotDto" statementType="CALLABLE">
+        CALL DABS_sp_ListAvailableSlots(#{p_DoctorId}, #{p_WorkDate})
+    </select>
+    <update id="clearSlotsRange" statementType="CALLABLE">
+        CALL DABS_sp_ClearSlotsRange(#{p_DoctorId}, #{p_FromDate}, #{p_ToDate})
+    </update>
+</mapper>

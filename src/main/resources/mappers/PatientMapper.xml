@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cabs.repository.PatientMapper">
+    <update id="registerPatient" statementType="CALLABLE">
+        CALL DABS_sp_RegisterPatient(#{p_Email})
+    </update>
+    <select id="getPatientById" resultType="com.example.cabs.domain.Patient" statementType="CALLABLE">
+        CALL DABS_sp_GetPatientById(#{p_PatientId})
+    </select>
+    <select id="getPatientIdByUserId" resultType="int" statementType="CALLABLE">
+        CALL DABS_sp_GetPatientIdByUserId(#{p_UserId})
+    </select>
+    <select id="listPatientsPendingActivation" resultType="com.example.cabs.dto.PatientActivationDto" statementType="CALLABLE">
+        CALL DABS_sp_ListPatientsPendingActivation()
+    </select>
+    <update id="activateUser" statementType="CALLABLE">
+        CALL DABS_sp_ActivateUser(#{p_UserId}, #{p_IsActive})
+    </update>
+    <update id="updatePatient" statementType="CALLABLE">
+        CALL DABS_sp_UpdatePatient(#{p_PatientId}, #{p_FullName})
+    </update>
+    <update id="deletePatientSoft" statementType="CALLABLE">
+        CALL DABS_sp_DeletePatientSoft(#{p_PatientId})
+    </update>
+</mapper>

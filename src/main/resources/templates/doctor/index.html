@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: body">
+<body>
+<section>
+    <h2>Doctor Slots</h2>
+    <form method="get" th:action="@{/doctor/slots}">
+        <div>
+            <label>Doctor Id</label>
+            <input type="number" name="doctorId" required/>
+        </div>
+        <div>
+            <label>Work Date</label>
+            <input type="date" name="workDate" required/>
+        </div>
+        <button type="submit">Query Slots</button>
+    </form>
+    <h3>Generate Slots</h3>
+    <form method="post" th:action="@{/doctor/slots/generate}">
+        <div>
+            <label>Doctor Id</label>
+            <input type="number" name="doctorId" required/>
+        </div>
+        <div>
+            <label>Work Date</label>
+            <input type="date" name="workDate" required/>
+        </div>
+        <div>
+            <label>Start Hour</label>
+            <input type="number" name="startHour" value="9" required/>
+        </div>
+        <div>
+            <label>End Hour</label>
+            <input type="number" name="endHour" value="17" required/>
+        </div>
+        <div>
+            <label>By User Id</label>
+            <input type="number" name="byUserId" required/>
+        </div>
+        <button type="submit">Generate</button>
+    </form>
+</section>
+</body>
+</html>
