@@ -1,149 +1,84 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: body">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
 <body>
-<section>
-    <h2>Admin</h2>
-    <h3>Doctor Management</h3>
-    <form method="post" th:action="@{/admin/doctor}">
-        <div>
-            <label>Email</label>
-            <input type="email" name="email" required/>
-        </div>
-        <button type="submit">Create</button>
-    </form>
-    <form method="put" th:action="@{/admin/doctor}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>Name</label>
-            <input type="text" name="name" required/>
-        </div>
-        <button type="submit">Update</button>
-    </form>
-    <form method="post" th:action="@{/admin/doctor/__delete__}" th:object="${_csrf}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <button type="submit">Delete</button>
-    </form>
-    <h3>Slot Ops</h3>
-    <form method="post" th:action="@{/admin/slots/generate}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>Work Date</label>
-            <input type="date" name="workDate" required/>
-        </div>
-        <div>
-            <label>Start Hour</label>
-            <input type="number" name="startHour" value="9" required/>
-        </div>
-        <div>
-            <label>End Hour</label>
-            <input type="number" name="endHour" value="17" required/>
-        </div>
-        <div>
-            <label>Admin User Id</label>
-            <input type="number" name="adminUserId" required/>
-        </div>
-        <button type="submit">Generate</button>
-    </form>
-    <form method="post" th:action="@{/admin/slots/generate-range}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>From</label>
-            <input type="date" name="fromDate" required/>
-        </div>
-        <div>
-            <label>To</label>
-            <input type="date" name="toDate" required/>
-        </div>
-        <div>
-            <label>Start Hour</label>
-            <input type="number" name="startHour" value="9" required/>
-        </div>
-        <div>
-            <label>End Hour</label>
-            <input type="number" name="endHour" value="17" required/>
-        </div>
-        <div>
-            <label>Admin User Id</label>
-            <input type="number" name="adminUserId" required/>
-        </div>
-        <button type="submit">Generate Range</button>
-    </form>
-    <form method="post" th:action="@{/admin/slots/clear}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>From</label>
-            <input type="date" name="fromDate" required/>
-        </div>
-        <div>
-            <label>To</label>
-            <input type="date" name="toDate" required/>
-        </div>
-        <button type="submit">Clear</button>
-    </form>
-    <h3>Patient Activation</h3>
-    <form method="post" th:action="@{/admin/patients/activate}">
-        <div>
-            <label>User Id</label>
-            <input type="number" name="userId" required/>
-        </div>
-        <div>
-            <label>Active</label>
-            <select name="isActive">
-                <option value="true">true</option>
-                <option value="false">false</option>
-            </select>
-        </div>
-        <button type="submit">Apply</button>
-    </form>
-    <h3>Reports</h3>
-    <form method="get" th:action="@{/admin/report/doctor-appointments}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>From UTC</label>
-            <input type="datetime-local" name="fromUtc" required/>
-        </div>
-        <button type="submit">Appointments</button>
-    </form>
-    <form method="get" th:action="@{/admin/report/doctor-appointments/csv}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>From UTC</label>
-            <input type="datetime-local" name="fromUtc" required/>
-        </div>
-        <button type="submit">Appointments CSV</button>
-    </form>
-    <form method="get" th:action="@{/admin/report/doctor-totals}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>From UTC</label>
-            <input type="datetime-local" name="fromUtc" required/>
-        </div>
-        <button type="submit">Totals</button>
-    </form>
-</section>
+<header>
+    <nav class="nav">
+        <a class="brand" th:href="@{/}">CABS</a>
+        <a th:href="@{/doctor}">Doctor</a>
+        <a th:href="@{/patient}">Patient</a>
+        <form th:action="@{/logout}" method="post" class="logout">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+</header>
+<main>
+    <section>
+        <h2>Admin</h2>
+
+        <h3>Doctor Management</h3>
+        <form method="post" th:action="@{/admin/doctor}">
+            <div><label>Email</label><input type="email" name="email" required/></div>
+            <button type="submit">Create</button>
+        </form>
+
+        <form method="post" th:action="@{/admin/doctor}">
+            <input type="hidden" name="_method" value="put"/>
+            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
+            <div><label>Name</label><input type="text" name="name" required/></div>
+            <button type="submit">Update</button>
+        </form>
+
+        <form method="post" th:action="@{/admin/doctor/{id}(id=${doctorId})}">
+            <input type="hidden" name="_method" value="delete"/>
+            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
+            <button type="submit">Delete</button>
+        </form>
+
+        <h3>Slot Ops</h3>
+        <form method="post" th:action="@{/admin/slots/generate}">
+            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
+            <div><label>Work Date</label><input type="date" name="workDate" required/></div>
+            <div><label>Start Hour</label><input type="number" name="startHour" value="9" required/></div>
+            <div><label>End Hour</label><input type="number" name="endHour" value="17" required/></div>
+            <div><label>Admin User Id</label><input type="number" name="adminUserId" required/></div>
+            <button type="submit">Generate</button>
+        </form>
+
+        <form method="post" th:action="@{/admin/slots/generate-range}">
+            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
+            <div><label>From</label><input type="date" name="fromDate" required/></div>
+            <div><label>To</label><input type="date" name="toDate" required/></div>
+            <div><label>Start Hour</label><input type="number" name="startHour" value="9" required/></div>
+            <div><label>End Hour</label><input type="number" name="endHour" value="17" required/></div>
+            <div><label>Admin User Id</label><input type="number" name="adminUserId" required/></div>
+            <button type="submit">Generate Range</button>
+        </form>
+
+        <form method="post" th:action="@{/admin/slots/clear}">
+            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
+            <div><label>From</label><input type="date" name="fromDate" required/></div>
+            <div><label>To</label><input type="date" name="toDate" required/></div>
+            <button type="submit">Clear</button>
+        </form>
+
+        <h3>Patient Activation</h3>
+        <form method="post" th:action="@{/admin/patients/activate}">
+            <div><label>User Id</label><input type="number" name="userId" required/></div>
+            <div><label>Active</label>
+                <select name="isActive">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select>
+            </div>
+            <button type="submit">Apply</button>
+        </form>
+    </section>
+</main>
+<footer>© CST8319 Demo</footer>
 </body>
 </html>

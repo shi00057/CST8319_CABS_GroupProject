@@ -1,11 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: body">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>CST8319 CABS Demo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
 <body>
-<section>
-    <h2>Doctors</h2>
-    <form method="get" th:action="@{/doctor/list}">
-        <button type="submit">Load Doctors</button>
-    </form>
-</section>
+<header>
+    <nav class="nav">
+        <a class="brand" th:href="@{/}">CABS</a>
+
+    </nav>
+</header>
+<main>
+    <div class="hero">
+        <h1>CST8319 CABS Demo</h1>
+        <p>Welcome</p>
+        <a class="btn" th:href="@{/login}">Go to Login</a>
+    </div>
+</main>
+<footer>© CST8319 Demo</footer>
 </body>
 </html>

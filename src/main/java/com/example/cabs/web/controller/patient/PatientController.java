@@ -72,4 +72,14 @@ public class PatientController {
         patientService.updatePatient(request);
         return ResponseEntity.noContent().build();
     }
+    // in PatientController
+    @GetMapping("/patient/register")
+    public String showRegisterPage() { return "patient/register"; }
+
+    @PostMapping("/patient/register")
+    public String handleRegister(/* fields */) {
+        // create inactive user + patient; then redirect
+        return "redirect:/login?success";
+    }
+
 }

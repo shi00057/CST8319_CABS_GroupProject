@@ -8,6 +8,9 @@
     --border: #e5e7eb;
     --radius: 12px;
     --shadow: 0 10px 25px rgba(0,0,0,0.08);
+    --primary-50: #eff6ff;
+    --primary-100: #dbeafe;
+    --primary-200: #bfdbfe;
 }
 
 * { box-sizing: border-box; }
@@ -16,11 +19,15 @@ html, body { height: 100%; }
 
 body {
     margin: 0;
-    background: var(--bg);
     color: var(--fg);
     font: 16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background:
+            radial-gradient(1000px 600px at 8% -10%, rgba(59,130,246,.12), transparent),
+            radial-gradient(800px 500px at 110% 10%, rgba(59,130,246,.10), transparent),
+            radial-gradient(700px 400px at 50% 120%, rgba(59,130,246,.08), transparent),
+            var(--bg);
 }
 
 header nav {
@@ -31,7 +38,8 @@ header nav {
     align-items: center;
     gap: .5rem;
     padding: .75rem 1rem;
-    background: var(--surface);
+    background: color-mix(in srgb, var(--surface) 92%, white);
+    backdrop-filter: saturate(130%) blur(6px);
     border-bottom: 1px solid var(--border);
 }
 
@@ -40,11 +48,18 @@ header nav a {
     color: var(--fg);
     padding: .5rem .75rem;
     border-radius: 10px;
-    transition: background .2s ease, color .2s ease;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
 }
 
 header nav a:hover {
-    background: #eef2ff;
+    background: var(--primary-50);
+    box-shadow: 0 0 0 2px var(--primary-100) inset;
+}
+
+header nav .brand {
+    font-weight: 700;
+    margin-right: .5rem;
+    color: var(--primary);
 }
 
 header nav form {
@@ -54,7 +69,7 @@ header nav form {
 header nav form button {
     appearance: none;
     border: 0;
-    background: var(--primary);
+    background: linear-gradient(180deg, var(--primary), color-mix(in srgb, var(--primary) 86%, #000 14%));
     color: var(--primary-ink);
     padding: .5rem .9rem;
     border-radius: 10px;
@@ -71,7 +86,7 @@ section {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: 0 0 0 1px var(--border), 0 12px 30px rgba(59,130,246,0.08);
     padding: 1.25rem;
     margin-bottom: 1.25rem;
 }
@@ -83,6 +98,23 @@ h1, h2, h3 {
 
 h2 { font-size: 1.35rem; }
 h3 { font-size: 1.1rem; color: var(--muted); }
+
+.hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(180deg, var(--primary-50), transparent);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 0 0 1px var(--border), 0 16px 40px rgba(59,130,246,.12);
+}
+
+.hero h1 {
+    font-size: 2rem;
+    background: linear-gradient(90deg, var(--primary), #60a5fa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
 
 form {
     display: grid;
@@ -111,23 +143,46 @@ textarea {
     border-radius: 10px;
     background: #fff;
     color: var(--fg);
+    transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid transparent;
+    border-color: var(--primary-200);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 25%, transparent);
+    background: color-mix(in srgb, #fff 92%, var(--primary-50));
 }
 
 button,
-input[type="submit"] {
+input[type="submit"],
+.btn {
     appearance: none;
     border: 0;
-    background: var(--primary);
+    background: linear-gradient(180deg, var(--primary), color-mix(in srgb, var(--primary) 86%, #000 14%));
     color: var(--primary-ink);
     padding: .6rem 1rem;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
-    transition: transform .06s ease;
+    transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover,
+input[type="submit"]:hover,
+.btn:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 8px 18px rgba(59,130,246,.22);
 }
 
 button:active,
-input[type="submit"]:active {
+input[type="submit"]:active,
+.btn:active {
     transform: translateY(1px);
 }
 
@@ -156,9 +211,13 @@ table th, table td {
 }
 
 table th {
-    background: #f3f4f6;
+    background: var(--primary-50);
     color: #111827;
     font-weight: 600;
+}
+
+tbody tr:hover td {
+    background: var(--primary-50);
 }
 
 .badge {
@@ -166,9 +225,10 @@ table th {
     align-items: center;
     padding: .2rem .45rem;
     border-radius: 999px;
-    background: #f3f4f6;
+    background: var(--primary-50);
     color: #111827;
     font-size: .75rem;
+    border: 1px solid var(--primary-100);
 }
 
 footer {
@@ -191,9 +251,74 @@ footer {
         --primary: #60a5fa;
         --primary-ink: #0b0d12;
         --shadow: 0 10px 25px rgba(0,0,0,0.35);
+        --primary-50: color-mix(in srgb, #60a5fa 12%, transparent);
+        --primary-100: color-mix(in srgb, #60a5fa 18%, transparent);
+        --primary-200: #3b82f6;
+    }
+    body {
+        background:
+                radial-gradient(1000px 600px at -10% -20%, rgba(96,165,250,.18), transparent),
+                radial-gradient(800px 500px at 120% -10%, rgba(96,165,250,.14), transparent),
+                radial-gradient(700px 400px at 50% 120%, rgba(96,165,250,.12), transparent),
+                var(--bg);
     }
     header nav a:hover { background: #1f2533; }
     table th { background: #1a2030; color: #e5e7eb; }
     input, select, textarea { background: #0f1320; color: var(--fg); border-color: var(--border); }
-    section { background: var(--surface); }
+    section { background: var(--surface); box-shadow: 0 0 0 1px var(--border), 0 16px 40px rgba(0,0,0,.45); }
+    tbody tr:hover td { background: color-mix(in srgb, #60a5fa 10%, transparent); }
+}
+
+/* Force readable input text */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+select,
+textarea {
+    color: #000 !important;                 /* typed text */
+    -webkit-text-fill-color: #000 !important; /* Chrome/Safari */
+    opacity: 1 !important;                  /* defeat dimming from frameworks */
+    background: #fff !important;            /* ensure light bg in light mode */
+}
+
+/* Placeholder contrast */
+input::placeholder,
+textarea::placeholder {
+    color: #6b7280 !important;
+    opacity: 1;
+}
+
+/* Autofill fix (prevents greyed text & yellow bg) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #000 !important;
+    box-shadow: 0 0 0 1000px #fff inset !important;
+    transition: background-color 9999s ease-out 0s; /* mask UA color */
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="date"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+        background: #0f1320 !important;
+        color: #e5e7eb !important;
+        -webkit-text-fill-color: #e5e7eb !important;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #e5e7eb !important;
+        box-shadow: 0 0 0 1000px #0f1320 inset !important;
+    }
 }

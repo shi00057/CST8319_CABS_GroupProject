@@ -150,11 +150,14 @@ public final class DbProcedures {
   public static final class DABS_sp_ListPatientsPendingActivation {
     public static final String NAME = "DABS_sp_ListPatientsPendingActivation";
   }
-  public static final class DABS_sp_Login {
-    public static final String NAME = "DABS_sp_Login";
-    public static final class P {
-      public static final String p_Email = "p_Email";
-    }
+    public static final class DABS_sp_Login {
+        public static final String NAME = "DABS_sp_Login";
+        public static final class P {
+            public static final String p_Email = "p_Email";
+            public static final String p_PasswordHash = "p_PasswordHash";
+        }
+
+
   }
   public static final class DABS_sp_Notifications_CountUnread {
     public static final String NAME = "DABS_sp_Notifications_CountUnread";

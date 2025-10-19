@@ -1,43 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout :: body">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Doctor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
 <body>
-<section>
-    <h2>Doctor Slots</h2>
-    <form method="get" th:action="@{/doctor/slots}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>Work Date</label>
-            <input type="date" name="workDate" required/>
-        </div>
-        <button type="submit">Query Slots</button>
-    </form>
-    <h3>Generate Slots</h3>
-    <form method="post" th:action="@{/doctor/slots/generate}">
-        <div>
-            <label>Doctor Id</label>
-            <input type="number" name="doctorId" required/>
-        </div>
-        <div>
-            <label>Work Date</label>
-            <input type="date" name="workDate" required/>
-        </div>
-        <div>
-            <label>Start Hour</label>
-            <input type="number" name="startHour" value="9" required/>
-        </div>
-        <div>
-            <label>End Hour</label>
-            <input type="number" name="endHour" value="17" required/>
-        </div>
-        <div>
-            <label>By User Id</label>
-            <input type="number" name="byUserId" required/>
-        </div>
-        <button type="submit">Generate</button>
-    </form>
-</section>
+<header>
+    <nav class="nav">
+        <a class="brand" th:href="@{/}">CABS</a>
+        <a th:href="@{/admin}">Admin</a>
+        <a th:href="@{/patient}">Patient</a>
+        <form th:action="@{/logout}" method="post" class="logout">
+            <button type="submit">Logout</button>
+        </form>
+    </nav>
+</header>
+<main>
+    <section>
+        <h2>Doctor Slots</h2>
+        <form method="get" th:action="@{/doctor/slots}">
+            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
+            <div><label>Work Date</label><input type="date" name="workDate" required/></div>
+            <button type="submit">Query Slots</button>
+        </form>
+        <h3>Generate Slots</h3>
+        <form method="post" th:action="@{/doctor/slots/generate}">
+            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
+            <div><label>Work Date</label><input type="date" name="workDate" required/></div>
+            <div><label>Start Hour</label><input type="number" name="startHour" value="9" required/></div>
+            <div><label>End Hour</label><input type="number" name="endHour" value="17" required/></div>
+            <div><label>By User Id</label><input type="number" name="byUserId" required/></div>
+            <button type="submit">Generate</button>
+        </form>
+    </section>
+</main>
+<footer>© CST8319 Demo</footer>
 </body>
 </html>
