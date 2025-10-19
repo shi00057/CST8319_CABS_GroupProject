@@ -1,5 +1,5 @@
 package com.example.cabs.web.controller.patient;
-
+import com.example.cabs.dto.PatientRegisterRequest;
 import com.example.cabs.dto.AppointmentDto;
 import com.example.cabs.dto.PatientUpdateRequest;
 import com.example.cabs.service.AppointmentService;
@@ -23,10 +23,11 @@ public class PatientController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestParam String email) {
-        patientService.registerPatient(email);
+    public ResponseEntity<Void> register(@RequestBody PatientRegisterRequest req) {
+        patientService.registerPatient(req);
         return ResponseEntity.noContent().build();
     }
+
 
     @GetMapping("/appointments")
     public List<AppointmentDto> listAppointments(@RequestParam(required = false) Integer doctorId,
@@ -72,14 +73,4 @@ public class PatientController {
         patientService.updatePatient(request);
         return ResponseEntity.noContent().build();
     }
-    // in PatientController
-    @GetMapping("/patient/register")
-    public String showRegisterPage() { return "patient/register"; }
-
-    @PostMapping("/patient/register")
-    public String handleRegister(/* fields */) {
-        // create inactive user + patient; then redirect
-        return "redirect:/login?success";
-    }
-
 }

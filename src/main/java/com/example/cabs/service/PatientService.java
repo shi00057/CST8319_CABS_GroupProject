@@ -3,11 +3,11 @@ package com.example.cabs.service;
 import com.example.cabs.domain.Patient;
 import com.example.cabs.dto.PatientActivationDto;
 import com.example.cabs.dto.PatientUpdateRequest;
-
+import com.example.cabs.dto.PatientRegisterRequest;
 import java.util.List;
 
 public interface PatientService {
-    void registerPatient(String email);
+    void registerPatient(PatientRegisterRequest request);
     Patient getPatientById(Integer patientId);
     Integer getPatientIdByUserId(Integer userId);
     List<PatientActivationDto> listPatientsPendingActivation();

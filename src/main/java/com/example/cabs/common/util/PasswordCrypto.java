@@ -1,11 +1,33 @@
 package com.example.cabs.common.util;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 
 public final class PasswordCrypto {
+
+    private static final SecureRandom RNG;
+    static {
+        SecureRandom tmp;
+        try {
+            tmp = SecureRandom.getInstanceStrong();
+        } catch (Exception e) {
+            tmp = new SecureRandom();
+        }
+        RNG = tmp;
+    }
+
+    /** Generate cryptographic salt with the given length (in bytes). */
+    public static byte[] generateSalt(int length) {
+        byte[] salt = new byte[length];
+        RNG.nextBytes(salt);
+        return salt;
+    }
+
+    /** MySQL-side algorithm: SHA256( HEX(salt) + rawPassword ), returns 32-byte binary. */
     public static byte[] mysqlHash(byte[] salt, String rawPassword) {
         String saltHex = toHex(salt);
-        byte[] input = (saltHex + rawPassword).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        byte[] input = (saltHex + rawPassword).getBytes(StandardCharsets.UTF_8);
         return sha256(input);
     }
 
@@ -28,4 +50,6 @@ public final class PasswordCrypto {
             throw new IllegalStateException(e);
         }
     }
+
+    private PasswordCrypto() {}
 }
