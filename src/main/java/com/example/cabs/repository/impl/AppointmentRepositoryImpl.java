@@ -19,19 +19,30 @@ public class AppointmentRepositoryImpl {
         mapper.bookAppointment(doctorId, patientId, startUtc);
     }
 
+    public void bookAppointmentV2(Integer doctorId, Integer patientId, LocalDateTime startUtc, LocalDateTime endUtc, Integer byUserId) {
+        mapper.bookAppointmentV2(doctorId, patientId, startUtc, endUtc, byUserId);
+    }
+
     public void cancelAppointment(Long apptId, Integer patientId, Integer byUserId) {
         mapper.cancelAppointment(apptId, patientId, byUserId);
     }
 
     public List<AppointmentDto> listAppointments(Integer doctorId, Integer patientId, LocalDateTime fromUtc) {
-        return mapper.listAppointments(doctorId, patientId, fromUtc);
+        LocalDateTime toUtc = fromUtc.plusYears(1);
+        return mapper.listAppointmentsV2(doctorId, patientId, fromUtc, toUtc);
     }
 
     public List<AppointmentDto> listAppointmentsByDoctor(Integer doctorId, LocalDateTime fromUtc) {
-        return mapper.listAppointmentsByDoctor(doctorId, fromUtc);
+        LocalDateTime toUtc = fromUtc.plusYears(1);
+        return mapper.listAppointmentsByDoctorV2(doctorId, fromUtc, toUtc);
     }
 
     public List<AppointmentDto> listAppointmentsByPatient(Integer patientId, LocalDateTime fromUtc) {
-        return mapper.listAppointmentsByPatient(patientId, fromUtc);
+        LocalDateTime toUtc = fromUtc.plusYears(1);
+        return mapper.listAppointmentsByPatientV2(patientId, fromUtc, toUtc);
+    }
+
+    public void cancelAppointmentByDoctor(Long apptId, Integer doctorId, Integer byUserId) {
+        mapper.cancelAppointmentByDoctor(apptId, doctorId, byUserId);
     }
 }

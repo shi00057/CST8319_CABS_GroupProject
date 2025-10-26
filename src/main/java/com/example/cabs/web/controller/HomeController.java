@@ -23,12 +23,4 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/admin")
-    public String adminIndex() { return "admin/index"; }
-
-    @GetMapping("/doctor")
-    public String doctorIndex() { return "doctor/index"; }
-
-    @GetMapping("/patient")
-    public String patientIndex() { return "patient/index"; }
 }

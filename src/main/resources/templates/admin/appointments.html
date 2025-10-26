@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Manage Appointments</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="layout">
+    <div th:replace="~{admin/_sidebar :: adminSidebar('appointments')}"></div>
+
+    <section class="content">
+        <h2>Manage Appointments</h2>
+        <a class="btn" th:href="@{/admin}">Back to Dashboard</a>
+
+        <div class="card">
+            <form class="form-inline" th:action="@{/admin/appointments}" method="get">
+                <input type="number" name="doctorId" min="1" placeholder="Doctor ID"/>
+                <input type="number" name="patientId" min="1" placeholder="Patient ID"/>
+                <input type="datetime-local" name="fromUtc" placeholder="From (UTC)"/>
+                <button type="submit">Filter</button>
+            </form>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Appt ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Doctor</th>
+                    <th>Patient</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${appointments}">
+                    <td th:text="${a.id} ?: '-'">-</td>
+                    <td th:text="${a.startTime != null ? #temporals.format(a.startTime, 'yyyy-MM-dd') : '-'}">-</td>
+                    <td th:text="${a.startTime != null and a.endTime != null ? #temporals.format(a.startTime, 'HH:mm') + ' - ' + #temporals.format(a.endTime, 'HH:mm') : '-'}">-</td>
+                    <td th:text="${a.doctorName} ?: '-'">-</td>
+                    <td th:text="${a.patientName} ?: '-'">-</td>
+                    <td th:text="${a.status} ?: '-'">-</td>
+                    <td>
+                        <form th:if="${a.cancellable == true}"
+                              th:action="@{|/admin/appointments/${a.id}/cancel|}"
+                              method="post">
+                            <input type="hidden" name="doctorId" th:value="${a.doctorId}"/>
+                            <button type="submit">Cancel</button>
+                        </form>
+                        <span th:if="${a.cancellable != true}">-</span>
+                    </td>
+                </tr>
+
+                <tr th:if="${appointments == null or #lists.isEmpty(appointments)}">
+                    <td colspan="7">No appointments found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

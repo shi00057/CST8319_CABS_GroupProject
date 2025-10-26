@@ -19,8 +19,15 @@ mybatis:
 
 logging:
   level:
+    org.springframework.web: DEBUG
     org.springframework.security: DEBUG
+    org.mybatis: DEBUG
+    org.springframework.jdbc: DEBUG
+    org.thymeleaf: TRACE
 
 
 server:
   port: 8080
+  error:
+    include-message: always
+    include-exception: true

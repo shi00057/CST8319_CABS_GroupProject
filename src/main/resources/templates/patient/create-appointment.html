@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create Appointment</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
+</head>
+<body>
+<main class="layout">
+    <div th:replace="~{patient/_sidebar :: patientSidebar('create')}"></div>
+    <section class="content">
+        <h2>
+            Hello, <span th:text="${username} ?: ${#request.remoteUser}">Patient</span>.
+            <small>Today is <span th:text="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}">2025-10-20</span></small>
+        </h2>
+
+        <div class="card">
+            <h3>Select Doctor</h3>
+            <form method="get" th:action="@{/patient/create-appointment}">
+                <label for="doctorId">Doctor</label>
+                <select id="doctorId" name="doctorId" required>
+                    <option value="" disabled th:selected="${doctor == null}">Select...</option>
+                    <option th:each="d : ${doctors}"
+                            th:value="${d.doctorId}"
+                            th:selected="${doctor != null and d.doctorId == doctor.doctorId}"
+                            th:text="${d.name + ' (' + d.specialty + ')'}">
+                        Dr. Smith (Family)
+                    </option>
+                </select>
+
+                <label for="workDate">Date</label>
+                <input id="workDate" type="text" name="workDate"
+                       th:value="${workDate != null ? #temporals.format(workDate, 'yyyy-MM-dd') : ''}"
+                       required/>
+
+                <button type="submit">Show Available Slots</button>
+            </form>
+        </div>
+
+        <div class="card" th:if="${doctor != null}">
+            <h3 th:text="'Available Slots for ' + ${doctor.name}">Available Slots</h3>
+            <table class="list">
+                <thead>
+                <tr><th>Start (UTC)</th><th>End (UTC)</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${slots}">
+                    <td th:text="${#temporals.format(s.startUtc, 'yyyy-MM-dd''T''HH:mm:ss')}">2025-10-20T14:00:00</td>
+                    <td th:text="${#temporals.format(s.endUtc,   'yyyy-MM-dd''T''HH:mm:ss')}">2025-10-20T14:30:00</td>
+                    <td>
+                        <form method="post" th:action="@{/patient/book-form}">
+                            <input type="hidden" name="doctorId" th:value="${doctor.doctorId}"/>
+                            <input type="hidden" name="startUtc" th:value="${#temporals.format(s.startUtc, 'yyyy-MM-dd''T''HH:mm:ss')}"/>
+                            <input type="hidden" name="endUtc"   th:value="${#temporals.format(s.endUtc,   'yyyy-MM-dd''T''HH:mm:ss')}"/>
+                            <button type="submit">Book</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(slots)}">
+                    <td colspan="3">No available slots.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><a class="btn" th:href="@{/patient}">Back to Dashboard</a></p>
+    </section>
+</main>
+
+<div th:replace="~{patient/_notifications :: panel(${notifications})}"></div>
+<footer>© CST8319 Demo</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var el = document.getElementById('workDate');
+        if (el) {
+            flatpickr(el, { dateFormat: 'Y-m-d', minDate: 'today' });
+        }
+    });
+</script>
+</body>
+</html>

@@ -25,13 +25,17 @@ public class AdminController {
     private final PatientService patientService;
     private final ReportingService reportingService;
 
-    public AdminController(DoctorService doctorService, AppointmentService appointmentService, PatientService patientService, ReportingService reportingService) {
+    public AdminController(DoctorService doctorService,
+                           AppointmentService appointmentService,
+                           PatientService patientService,
+                           ReportingService reportingService) {
         this.doctorService = doctorService;
         this.appointmentService = appointmentService;
         this.patientService = patientService;
         this.reportingService = reportingService;
     }
 
+    // --- Doctors
     @GetMapping("/doctors")
     public List<DoctorBasicDto> listDoctors() {
         return doctorService.listDoctorsBasic();
@@ -55,6 +59,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    // --- Slots (admin)
     @PostMapping("/slots/generate")
     public ResponseEntity<Void> adminGenerateSlots(@RequestParam Integer doctorId,
                                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate workDate,
@@ -84,6 +89,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    // --- Patients activation
     @GetMapping("/patients/pending")
     public List<PatientActivationDto> pendingPatients() {
         return patientService.listPatientsPendingActivation();
@@ -95,6 +101,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    // --- Reports (doctor-centric)
     @GetMapping("/report/doctor-appointments")
     public List<AppointmentDto> reportDoctorAppointments(@RequestParam Integer doctorId,
                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc) {

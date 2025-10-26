@@ -42,11 +42,18 @@ public class AppointmentServiceImpl implements AppointmentService {
         apptRepo.bookAppointment(doctorId, patientId, startUtc);
     }
 
+//    @Override
+//    @Transactional
+//    public void bookAppointmentForPatientUser(Integer doctorId, Integer patientUserId, LocalDateTime startUtc) {
+//        Integer patientId = patientRepo.getPatientIdByUserId(patientUserId);
+//        apptRepo.bookAppointment(doctorId, patientId, startUtc);
+//    }
+
     @Override
     @Transactional
-    public void bookAppointmentForPatientUser(Integer doctorId, Integer patientUserId, LocalDateTime startUtc) {
+    public void bookAppointmentForPatientUser(Integer doctorId, Integer patientUserId, LocalDateTime startUtc, LocalDateTime endUtc) {
         Integer patientId = patientRepo.getPatientIdByUserId(patientUserId);
-        apptRepo.bookAppointment(doctorId, patientId, startUtc);
+        apptRepo.bookAppointmentV2(doctorId, patientId, startUtc, endUtc, patientUserId);
     }
 
     @Override
@@ -61,6 +68,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         Integer patientId = patientRepo.getPatientIdByUserId(patientUserId);
         apptRepo.cancelAppointment(apptId, patientId, byUserId);
     }
+    @Override
+    @Transactional
+    public void cancelAppointmentForDoctor(Long apptId, Integer doctorId, Integer byUserId) {
+        apptRepo.cancelAppointmentByDoctor(apptId, doctorId, byUserId);
+    }
+
 
     @Override
     public List<AppointmentDto> listAppointments(Integer doctorId, Integer patientId, LocalDateTime fromUtc) {

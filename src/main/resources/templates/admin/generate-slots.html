@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Generate Doctor Slots</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="layout">
+    <div th:replace="~{admin/_sidebar :: adminSidebar('slots')}"></div>
+
+    <section class="content">
+        <h2>Generate Doctor Slots</h2>
+        <a class="btn" th:href="@{/admin}">Back to Dashboard</a>
+
+        <div class="card">
+            <form th:action="@{/admin/generate-slots}" method="post" class="form-grid">
+                <label>
+                    Doctor
+                    <select name="doctorId" required>
+                        <option value="" disabled selected>Select a doctor</option>
+                        <option th:each="d : ${doctors}" th:value="${d.id}" th:text="${d.fullName}">Dr. A</option>
+                    </select>
+                </label>
+                <label>
+                    Start Date
+                    <input type="date" name="startDate" required/>
+                </label>
+                <label>
+                    End Date
+                    <input type="date" name="endDate" required/>
+                </label>
+                <label>
+                    Slot Minutes
+                    <input type="number" name="slotMinutes" min="5" step="5" value="30" required/>
+                </label>
+                <div class="form-actions">
+                    <button type="submit">Generate</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" th:if="${generatedCount != null}">
+            <p th:text="'Generated ' + ${generatedCount} + ' slots.'">Generated 0 slots.</p>
+        </div>
+        <div class="card" th:if="${message}">
+            <p th:text="${message}">Done.</p>
+        </div>
+    </section>
+</main>
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

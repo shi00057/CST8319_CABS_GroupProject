@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- active: 'dashboard' | 'schedule' | 'appointments' | 'profile' -->
+<aside th:fragment="doctorSidebar(active)" class="sidebar">
+    <div class="sidebar-header">
+        <a class="brand" th:href="@{/}">CABS</a>
+    </div>
+
+    <nav class="side-nav">
+        <a th:href="@{/doctor/schedule}"
+           th:classappend="${active}=='schedule' ? ' active' : ''">Generate Slots</a>
+
+        <a th:href="@{/doctor/appointments}"
+           th:classappend="${active}=='appointments' ? ' active' : ''">My Appointments</a>
+
+        <a th:href="@{/doctor/profile}"
+           th:classappend="${active}=='profile' ? ' active' : ''">My Profile</a>
+    </nav>
+
+    <form th:action="@{/logout}" method="post" class="side-logout">
+        <button type="submit">Logout</button>
+    </form>
+</aside>
+</body>
+</html>

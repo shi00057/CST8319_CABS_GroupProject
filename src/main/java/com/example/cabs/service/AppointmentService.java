@@ -11,9 +11,10 @@ public interface AppointmentService {
     List<SlotDto> listAvailableSlots(Integer doctorId, LocalDate workDate);
     void clearSlotsRange(Integer doctorId, LocalDate fromDate, LocalDate toDate);
     void bookAppointment(Integer doctorId, Integer patientId, LocalDateTime startUtc);
-    void bookAppointmentForPatientUser(Integer doctorId, Integer patientUserId, LocalDateTime startUtc);
+    void bookAppointmentForPatientUser(Integer doctorId, Integer patientUserId, LocalDateTime startUtc, LocalDateTime endUtc);
     void cancelAppointment(Long apptId, Integer patientId, Integer byUserId);
     void cancelAppointmentForPatientUser(Long apptId, Integer patientUserId, Integer byUserId);
+    void cancelAppointmentForDoctor(Long apptId, Integer doctorId, Integer byUserId);
     List<AppointmentDto> listAppointments(Integer doctorId, Integer patientId, LocalDateTime fromUtc);
     List<AppointmentDto> listAppointmentsByDoctor(Integer doctorId, LocalDateTime fromUtc);
     List<AppointmentDto> listAppointmentsByPatient(Integer patientId, LocalDateTime fromUtc);

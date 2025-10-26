@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Registration Successful</title>
+    <meta http-equiv="refresh" content="5;url=/" />
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script>
+        // Fallback for environments that ignore meta refresh:
+        setTimeout(function(){ window.location.href = "/"; }, 5000);
+    </script>
+</head>
+<body>
+<header>
+    <nav class="nav">
+        <a class="brand" th:href="@{/}">CABS</a>
+    </nav>
+</header>
+
+<main class="layout single">
+    <section class="content">
+        <h2>Registration Successful</h2>
+        <p>Your account has been created and is pending activation.</p>
+        <p>You will be redirected to the home page in 5 seconds.</p>
+        <p><a class="btn" th:href="@{/}">Go to Home now</a></p>
+    </section>
+</main>
+
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<main class="layout">
+    <div th:replace="~{doctor/_sidebar :: doctorSidebar('profile')}"></div>
+
+    <section class="content">
+        <header class="content-header">
+            <h2>My Profile</h2>
+            <a th:href="@{/doctor}" class="btn">Back to Dashboard</a>
+        </header>
+
+        <div class="card">
+            <form th:action="@{/doctor/profile}" th:object="${doctor}" method="post" class="form-grid">
+                <div>
+                    <label for="fullName">Full Name</label>
+                    <input id="fullName" th:field="*{fullName}" type="text" required>
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input id="email" th:field="*{email}" type="email" required>
+                </div>
+                <div>
+                    <label for="phone">Phone</label>
+                    <input id="phone" th:field="*{phone}" type="tel">
+                </div>
+                <div>
+                    <label for="specialty">Specialty</label>
+                    <input id="specialty" th:field="*{specialty}" type="text">
+                </div>
+                <div class="col-span-2">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" th:field="*{bio}" rows="4" placeholder="Short introduction"></textarea>
+                </div>
+
+                <div class="form-actions col-span-2">
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+
+            <p class="muted" th:if="${message}" th:text="${message}">Profile updated.</p>
+        </div>
+    </section>
+</main>
+
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

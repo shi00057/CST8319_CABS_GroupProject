@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Appointments</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<main class="layout">
+    <div th:replace="~{doctor/_sidebar :: doctorSidebar('appointments')}"></div>
+
+    <section class="content">
+        <header class="content-header">
+            <h2>My Appointments</h2>
+            <a th:href="@{/doctor}" class="btn">Back to Dashboard</a>
+        </header>
+
+        <div class="card">
+            <table class="table" th:if="${appointments}">
+                <thead>
+                <tr>
+                    <th>Date/Time</th>
+                    <th>Patient</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${appointments}">
+                    <td th:text="${#temporals.format(a.startTime, 'yyyy-MM-dd HH:mm')}">2025-10-26 10:00</td>
+                    <td th:text="${a.patientName}">John Doe</td>
+                    <td th:text="${a.status}">Scheduled</td>
+                    <td th:text="${a.notes}">N/A</td>
+                    <td>
+                        <form th:action="@{|/doctor/appointments/${a.id}/cancel|}" method="post"
+                              th:if="${a.cancellable}">
+                            <button type="submit"
+                                    onclick="return confirm('Cancel this appointment?');">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p th:if="${appointments == null or #lists.isEmpty(appointments)}" class="muted">
+                No appointments found.
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

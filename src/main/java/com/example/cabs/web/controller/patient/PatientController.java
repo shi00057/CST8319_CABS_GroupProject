@@ -1,4 +1,5 @@
 package com.example.cabs.web.controller.patient;
+
 import com.example.cabs.dto.PatientRegisterRequest;
 import com.example.cabs.dto.AppointmentDto;
 import com.example.cabs.dto.PatientUpdateRequest;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -28,27 +30,42 @@ public class PatientController {
         return ResponseEntity.noContent().build();
     }
 
-
     @GetMapping("/appointments")
-    public List<AppointmentDto> listAppointments(@RequestParam(required = false) Integer doctorId,
-                                                 @RequestParam(required = false) Integer patientId,
-                                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc) {
+    public List<AppointmentDto> listAppointments(
+            @RequestParam(required = false) Integer doctorId,
+            @RequestParam(required = false) Integer patientId,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc) {
+        if (fromUtc == null) {
+            fromUtc = LocalDateTime.now().minusDays(30);
+        }
         return appointmentService.listAppointments(doctorId, patientId, fromUtc);
     }
 
     @PostMapping("/book")
     public ResponseEntity<Void> book(@RequestParam Integer doctorId,
                                      @RequestParam Integer patientId,
-                                     @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startUtc) {
-        appointmentService.bookAppointment(doctorId, patientId, startUtc);
+                                     @RequestParam
+                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                     OffsetDateTime startUtc) {
+        appointmentService.bookAppointment(doctorId, patientId, startUtc.toLocalDateTime());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/book/by-user")
     public ResponseEntity<Void> bookByUser(@RequestParam Integer doctorId,
                                            @RequestParam Integer patientUserId,
-                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startUtc) {
-        appointmentService.bookAppointmentForPatientUser(doctorId, patientUserId, startUtc);
+                                           @RequestParam
+                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                           OffsetDateTime startUtc,
+                                           @RequestParam
+                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                           OffsetDateTime endUtc) {
+        appointmentService.bookAppointmentForPatientUser(
+                doctorId,
+                patientUserId,
+                startUtc.toLocalDateTime(),
+                endUtc.toLocalDateTime());
         return ResponseEntity.noContent().build();
     }
 

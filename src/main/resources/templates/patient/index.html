@@ -2,45 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Patient</title>
+    <title>Patient Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<header>
-    <nav class="nav">
-        <a class="brand" th:href="@{/}">CABS</a>
-        <a th:href="@{/admin}">Admin</a>
-        <a th:href="@{/doctor}">Doctor</a>
-        <form th:action="@{/logout}" method="post" class="logout">
-            <button type="submit">Logout</button>
-        </form>
-    </nav>
-</header>
-<main>
-    <section>
-        <h2>Patient</h2>
-        <h3>Register</h3>
-        <form method="post" th:action="@{/patient/register}">
-            <div><label>Email</label><input type="email" name="email" required/></div>
-            <button type="submit">Register</button>
-        </form>
-        <h3>Book Appointment</h3>
-        <form method="post" th:action="@{/patient/book}">
-            <div><label>Doctor Id</label><input type="number" name="doctorId" required/></div>
-            <div><label>Patient Id</label><input type="number" name="patientId" required/></div>
-            <div><label>Start UTC</label><input type="datetime-local" name="startUtc" required/></div>
-            <button type="submit">Book</button>
-        </form>
-        <h3>Cancel Appointment</h3>
-        <form method="post" th:action="@{/patient/cancel}">
-            <div><label>Appt Id</label><input type="number" name="apptId" required/></div>
-            <div><label>Patient Id</label><input type="number" name="patientId" required/></div>
-            <div><label>By User Id</label><input type="number" name="byUserId" required/></div>
-            <button type="submit">Cancel</button>
-        </form>
-        <div><a class="btn" th:href="@{/patient/appointments-page}">My Appointments</a></div>
+
+<main class="layout">
+    <div th:replace="~{patient/_sidebar :: patientSidebar('dashboard')}"></div>
+
+    <section class="content">
+        <h2>
+            Hello, <span th:text="${username} ?: ${#request.remoteUser}">Patient</span>.
+            <small>Today is <span th:text="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}">2025-10-20</span></small>
+        </h2>
+
+        <div class="card">
+            <h3>Welcome</h3>
+            <p>Use the left menu to create an appointment, manage existing appointments, or update your profile.</p>
+        </div>
     </section>
 </main>
+
+<!-- Unread notifications panel -->
+<div th:replace="~{patient/_notifications :: panel(${notifications})}"></div>
+
 <footer>© CST8319 Demo</footer>
 </body>
 </html>

@@ -1,0 +1,20 @@
+<!-- src/main/resources/templates/admin/_sidebar.html -->
+<aside xmlns:th="http://www.thymeleaf.org" th:fragment="adminSidebar(active)" class="sidebar">
+    <div class="sidebar-header">
+        <a class="brand" th:href="@{/}">CABS</a>
+    </div>
+
+    <nav class="side-nav">
+        <a th:href="@{/admin}"                   th:classappend="${active}=='dashboard' ? ' active' : ''">Dashboard</a>
+        <a th:href="@{/admin/activate-patient}"  th:classappend="${active}=='activate' ? ' active' : ''">Activate Patients</a>
+        <a th:href="@{/admin/register-doctor}"   th:classappend="${active}=='register' ? ' active' : ''">Register Doctor</a>
+        <a th:href="@{/admin/generate-slots}"    th:classappend="${active}=='slots' ? ' active' : ''">Generate Doctor Slots</a>
+        <a th:href="@{/admin/appointments}"      th:classappend="${active}=='appointments' ? ' active' : ''">Manage Appointments</a>
+        <a th:href="@{/admin/reports}"           th:classappend="${active}=='reports' ? ' active' : ''">Reports</a>
+    </nav>
+
+    <form th:action="@{/logout}" method="post" class="side-logout">
+        <button type="submit">Logout</button>
+    </form>
+</aside>
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Reports</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="layout">
+    <div th:replace="~{admin/_sidebar :: adminSidebar('reports')}"></div>
+
+    <section class="content">
+        <h2>Reports</h2>
+        <a class="btn" th:href="@{/admin}">Back to Dashboard</a>
+
+        <div class="card">
+            <form th:action="@{/admin/reports}" method="get" class="form-grid">
+                <label>
+                    Type
+                    <select name="type" required>
+                        <option value="appointments">Appointments</option>
+                        <option value="patients">Patients</option>
+                        <option value="doctors">Doctors</option>
+                    </select>
+                </label>
+                <label>
+                    From
+                    <input type="date" name="from" required/>
+                </label>
+                <label>
+                    To
+                    <input type="date" name="to" required/>
+                </label>
+                <div class="form-actions">
+                    <button type="submit">Generate</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card" th:if="${reportReady}">
+            <a class="btn" th:href="@{/admin/reports/download(type=${type}, from=${from}, to=${to})}">Download Report</a>
+        </div>
+    </section>
+</main>
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

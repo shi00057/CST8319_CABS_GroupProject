@@ -5,9 +5,23 @@
     <update id="bookAppointment" statementType="CALLABLE">
         CALL DABS_sp_BookAppointment(#{p_DoctorId}, #{p_PatientId}, #{p_StartUtc})
     </update>
+    <update id="bookAppointmentV2" statementType="CALLABLE">
+        CALL DABS_sp_BookAppointment(#{p_DoctorId}, #{p_PatientId}, #{p_StartUtc}, #{p_EndUtc}, #{p_ByUserId})
+    </update>
     <update id="cancelAppointment" statementType="CALLABLE">
         CALL DABS_sp_CancelAppointment(#{p_ApptId}, #{p_PatientId}, #{p_ByUserId})
     </update>
+
+    <select id="listAppointmentsV2" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
+        CALL DABS_sp_ListAppointments(#{p_DoctorId}, #{p_PatientId}, #{p_FromUtc}, #{p_ToUtc})
+    </select>
+    <select id="listAppointmentsByDoctorV2" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
+        CALL DABS_sp_ListAppointmentsByDoctor(#{p_DoctorId}, #{p_FromUtc}, #{p_ToUtc})
+    </select>
+    <select id="listAppointmentsByPatientV2" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
+        CALL DABS_sp_ListAppointmentsByPatient(#{p_PatientId}, #{p_FromUtc}, #{p_ToUtc})
+    </select>
+
     <select id="listAppointments" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
         CALL DABS_sp_ListAppointments(#{p_DoctorId}, #{p_PatientId}, #{p_FromUtc})
     </select>
@@ -17,4 +31,8 @@
     <select id="listAppointmentsByPatient" resultType="com.example.cabs.dto.AppointmentDto" statementType="CALLABLE">
         CALL DABS_sp_ListAppointmentsByPatient(#{p_PatientId}, #{p_FromUtc})
     </select>
+
+    <update id="cancelAppointmentByDoctor">
+        CALL DABS_sp_CancelAppointmentByDoctor(#{apptId}, #{doctorId}, #{byUserId})
+    </update>
 </mapper>

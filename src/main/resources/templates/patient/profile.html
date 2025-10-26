@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<main class="layout">
+    <div th:replace="~{patient/_sidebar :: patientSidebar('profile')}"></div>
+
+    <section class="content">
+        <h2>
+            Hello, <span th:text="${username} ?: ${#request.remoteUser}">Patient</span>.
+            <small>Today is <span th:text="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}">2025-10-20</span></small>
+        </h2>
+
+        <div class="card">
+            <h3>View / Update Profile</h3>
+            <form method="post" th:action="@{/patient/profile}">
+                <div>
+                    <label>First Name</label>
+                    <input type="text" name="firstName" th:value="${profile.firstName}" required/>
+                </div>
+                <div>
+                    <label>Last Name</label>
+                    <input type="text" name="lastName" th:value="${profile.lastName}" required/>
+                </div>
+                <div>
+                    <label>Email</label>
+                    <input type="email" name="email" th:value="${profile.email}" required readonly/>
+                </div>
+                <div>
+                    <label>Phone</label>
+                    <input type="tel" name="phone" th:value="${profile.phone}"/>
+                </div>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+
+        <p><a class="btn" th:href="@{/patient}">Back to Dashboard</a></p>
+    </section>
+</main>
+
+<div th:replace="~{patient/_notifications :: panel(${notifications})}"></div>
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

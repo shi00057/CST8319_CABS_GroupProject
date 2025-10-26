@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Register Doctor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="layout">
+    <div th:replace="~{admin/_sidebar :: adminSidebar('register')}"></div>
+
+    <section class="content">
+        <h2>Register Doctor</h2>
+        <a class="btn" th:href="@{/admin}">Back to Dashboard</a>
+
+        <div class="card">
+            <form th:action="@{/admin/register-doctor}" method="post" class="form-grid">
+                <label>
+                    Email
+                    <input type="email" name="email" required/>
+                </label>
+                <div class="form-actions">
+                    <button type="submit">Create</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Recently Registered</h3>
+            <ul class="list" th:if="${recentDoctors != null and !#lists.isEmpty(recentDoctors)}">
+                <li th:each="d : ${recentDoctors}">
+                    <span th:text="${d.fullName} ?: 'Doctor'">Doctor</span>
+                    <small th:text="${d.email} ?: '-'">-</small>
+                </li>
+            </ul>
+            <p th:if="${recentDoctors == null or #lists.isEmpty(recentDoctors)}">No recent doctors.</p>
+        </div>
+    </section>
+</main>
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

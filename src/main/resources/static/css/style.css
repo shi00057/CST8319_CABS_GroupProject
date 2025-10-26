@@ -14,7 +14,6 @@
 }
 
 * { box-sizing: border-box; }
-
 html, body { height: 100%; }
 
 body {
@@ -30,6 +29,7 @@ body {
             var(--bg);
 }
 
+/* ---------- Top header nav (used on pages that keep a top bar) ---------- */
 header nav {
     position: sticky;
     top: 0;
@@ -42,7 +42,6 @@ header nav {
     backdrop-filter: saturate(130%) blur(6px);
     border-bottom: 1px solid var(--border);
 }
-
 header nav a {
     text-decoration: none;
     color: var(--fg);
@@ -50,22 +49,12 @@ header nav a {
     border-radius: 10px;
     transition: background .2s ease, color .2s ease, box-shadow .2s ease;
 }
-
 header nav a:hover {
     background: var(--primary-50);
     box-shadow: 0 0 0 2px var(--primary-100) inset;
 }
-
-header nav .brand {
-    font-weight: 700;
-    margin-right: .5rem;
-    color: var(--primary);
-}
-
-header nav form {
-    margin-left: auto;
-}
-
+header nav .brand { font-weight: 700; margin-right: .5rem; color: var(--primary); }
+header nav form { margin-left: auto; }
 header nav form button {
     appearance: none;
     border: 0;
@@ -76,12 +65,8 @@ header nav form button {
     cursor: pointer;
 }
 
-main {
-    max-width: 1040px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
-
+/* ---------- Page containers ---------- */
+main { max-width: 1040px; margin: 2rem auto; padding: 0 1rem; }
 section {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -91,14 +76,12 @@ section {
     margin-bottom: 1.25rem;
 }
 
-h1, h2, h3 {
-    margin: 0 0 .75rem 0;
-    line-height: 1.25;
-}
-
+/* ---------- Typography ---------- */
+h1, h2, h3 { margin: 0 0 .75rem 0; line-height: 1.25; }
 h2 { font-size: 1.35rem; }
 h3 { font-size: 1.1rem; color: var(--muted); }
 
+/* ---------- Hero ---------- */
 .hero {
     text-align: center;
     padding: 3rem 1rem;
@@ -107,7 +90,6 @@ h3 { font-size: 1.1rem; color: var(--muted); }
     border-radius: var(--radius);
     box-shadow: 0 0 0 1px var(--border), 0 16px 40px rgba(59,130,246,.12);
 }
-
 .hero h1 {
     font-size: 2rem;
     background: linear-gradient(90deg, var(--primary), #60a5fa);
@@ -116,18 +98,9 @@ h3 { font-size: 1.1rem; color: var(--muted); }
     color: transparent;
 }
 
-form {
-    display: grid;
-    gap: .75rem;
-    max-width: 720px;
-}
-
-label {
-    display: block;
-    font-size: .9rem;
-    color: var(--muted);
-    margin-bottom: .25rem;
-}
+/* ---------- Forms ---------- */
+form { display: grid; gap: .75rem; max-width: 720px; }
+label { display: block; font-size: .9rem; color: var(--muted); margin-bottom: .25rem; }
 
 input[type="text"],
 input[type="email"],
@@ -145,19 +118,15 @@ textarea {
     color: var(--fg);
     transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
 }
-
-input:focus,
-select:focus,
-textarea:focus {
+input:focus, select:focus, textarea:focus {
     outline: 2px solid transparent;
     border-color: var(--primary-200);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 25%, transparent);
     background: color-mix(in srgb, #fff 92%, var(--primary-50));
 }
 
-button,
-input[type="submit"],
-.btn {
+/* Buttons */
+button, input[type="submit"], .btn {
     appearance: none;
     border: 0;
     background: linear-gradient(180deg, var(--primary), color-mix(in srgb, var(--primary) 86%, #000 14%));
@@ -168,78 +137,168 @@ input[type="submit"],
     font-weight: 600;
     transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-flex; align-items: center; justify-content: center;
 }
-
-button:hover,
-input[type="submit"]:hover,
-.btn:hover {
+button:hover, input[type="submit"]:hover, .btn:hover {
     filter: brightness(1.05);
     box-shadow: 0 8px 18px rgba(59,130,246,.22);
 }
-
-button:active,
-input[type="submit"]:active,
-.btn:active {
-    transform: translateY(1px);
-}
-
+button:active, input[type="submit"]:active, .btn:active { transform: translateY(1px); }
 a.button {
-    display: inline-block;
-    text-decoration: none;
-    background: var(--primary);
-    color: var(--primary-ink);
-    padding: .55rem .9rem;
-    border-radius: 10px;
+    display: inline-block; text-decoration: none; background: var(--primary);
+    color: var(--primary-ink); padding: .55rem .9rem; border-radius: 10px;
 }
 
+/* ---------- Tables ---------- */
 table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 100%; border-collapse: collapse; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+table th, table td { padding: .7rem .8rem; border-bottom: 1px solid var(--border); text-align: left; }
+table th { background: var(--primary-50); color: #111827; font-weight: 600; }
+tbody tr:hover td { background: var(--primary-50); }
+
+/* ---------- Badges ---------- */
+.badge {
+    display: inline-flex; align-items: center; padding: .2rem .45rem; border-radius: 999px;
+    background: var(--primary-50); color: #111827; font-size: .75rem; border: 1px solid var(--primary-100);
+}
+
+/* ---------- Footer ---------- */
+footer {
+    max-width: 1040px; margin: 2rem auto 3rem; padding: 0 1rem;
+    color: var(--muted); border-top: 1px solid var(--border); padding-top: 1rem; text-align: center;
+}
+
+/* ===================================================================== */
+/*                          LEFT SIDEBAR LAYOUT                           */
+/* ===================================================================== */
+
+main.layout {
+    /* overrides generic main for sidebar pages */
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+/* Sidebar container */
+.sidebar {
     background: var(--surface);
     border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 0 0 1px var(--border), var(--shadow);
+    padding: 1rem;
+    position: sticky;
+    top: 16px;
+    align-self: start;
+    height: fit-content;
+}
+
+.sidebar .brand {
+    display: inline-block;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+    margin-bottom: .5rem;
+}
+
+/* Sidebar nav list */
+.side-nav { display: grid; gap: .5rem; margin: .5rem 0 1rem; }
+.side-nav a {
+    text-decoration: none;
+    color: var(--fg);
+    padding: .55rem .7rem;
     border-radius: 10px;
-    overflow: hidden;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--surface) 92%, white);
+    transition: background .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-
-table th, table td {
-    padding: .7rem .8rem;
-    border-bottom: 1px solid var(--border);
-    text-align: left;
-}
-
-table th {
+.side-nav a:hover {
     background: var(--primary-50);
-    color: #111827;
+    box-shadow: 0 0 0 2px var(--primary-100) inset;
+}
+.side-nav a.active,
+.side-nav a[aria-current="page"] {
+    background: var(--primary-50);
+    border-color: var(--primary-100);
+    box-shadow: 0 0 0 2px var(--primary-100) inset;
     font-weight: 600;
 }
 
-tbody tr:hover td {
-    background: var(--primary-50);
+/* Sidebar logout button full width */
+.side-logout button { width: 100%; }
+
+/* Content column */
+.content { min-width: 0; } /* prevent overflow from wide tables/forms */
+
+/* Cards (optional, matches <section> style) */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 0 0 1px var(--border), 0 12px 30px rgba(59,130,246,0.08);
+    padding: 1rem;
 }
 
-.badge {
-    display: inline-flex;
-    align-items: center;
-    padding: .2rem .45rem;
-    border-radius: 999px;
-    background: var(--primary-50);
-    color: #111827;
-    font-size: .75rem;
-    border: 1px solid var(--primary-100);
-}
-
-footer {
-    max-width: 1040px;
-    margin: 2rem auto 3rem;
-    padding: 0 1rem;
-    color: var(--muted);
+/* ---------- Notifications bar ---------- */
+.notif-bar {
+    margin: 1.25rem 0 0;
     border-top: 1px solid var(--border);
-    padding-top: 1rem;
-    text-align: center;
+    background: color-mix(in srgb, var(--surface) 96%, white);
 }
+.notif-inner {
+    max-width: 1200px; margin: 0 auto; padding: 1rem;
+}
+.notif-list { display: grid; gap: .75rem; }
+.notif-item {
+    display: flex; gap: .75rem; justify-content: space-between; align-items: flex-start;
+    padding: .75rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+    main.layout { grid-template-columns: 1fr; gap: .75rem; }
+    .sidebar { position: static; }
+    .side-nav { grid-auto-flow: column; overflow-x: auto; gap: 8px; padding-bottom: 4px; }
+    .side-nav a { white-space: nowrap; }
+}
+
+/* ===================================================================== */
+/*                        INPUT READABILITY                          */
+/* ===================================================================== */
+
+/* Force readable input text (light mode) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="datetime-local"],
+select,
+textarea {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    opacity: 1 !important;
+    background: #fff !important;
+}
+
+/* Placeholder contrast */
+input::placeholder, textarea::placeholder { color: #6b7280 !important; opacity: 1; }
+
+/* Autofill fix (prevents greyed text & yellow bg) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #000 !important;
+    box-shadow: 0 0 0 1000px #fff inset !important;
+    transition: background-color 9999s ease-out 0s;
+}
+
+/* ===================================================================== */
+/*                               DARK MODE                                */
+/* ===================================================================== */
 
 @media (prefers-color-scheme: dark) {
     :root {
@@ -265,43 +324,10 @@ footer {
     header nav a:hover { background: #1f2533; }
     table th { background: #1a2030; color: #e5e7eb; }
     input, select, textarea { background: #0f1320; color: var(--fg); border-color: var(--border); }
-    section { background: var(--surface); box-shadow: 0 0 0 1px var(--border), 0 16px 40px rgba(0,0,0,.45); }
+    section, .card { background: var(--surface); box-shadow: 0 0 0 1px var(--border), 0 16px 40px rgba(0,0,0,.45); }
     tbody tr:hover td { background: color-mix(in srgb, #60a5fa 10%, transparent); }
-}
 
-/* Force readable input text */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="date"],
-input[type="datetime-local"],
-select,
-textarea {
-    color: #000 !important;                 /* typed text */
-    -webkit-text-fill-color: #000 !important; /* Chrome/Safari */
-    opacity: 1 !important;                  /* defeat dimming from frameworks */
-    background: #fff !important;            /* ensure light bg in light mode */
-}
-
-/* Placeholder contrast */
-input::placeholder,
-textarea::placeholder {
-    color: #6b7280 !important;
-    opacity: 1;
-}
-
-/* Autofill fix (prevents greyed text & yellow bg) */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #000 !important;
-    box-shadow: 0 0 0 1000px #fff inset !important;
-    transition: background-color 9999s ease-out 0s; /* mask UA color */
-}
-
-/* Dark mode */
-@media (prefers-color-scheme: dark) {
+    /* Inputs readable in dark */
     input[type="text"],
     input[type="email"],
     input[type="password"],
@@ -314,7 +340,6 @@ input:-webkit-autofill:focus {
         color: #e5e7eb !important;
         -webkit-text-fill-color: #e5e7eb !important;
     }
-
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus {

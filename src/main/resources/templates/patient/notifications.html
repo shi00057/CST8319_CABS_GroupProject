@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Notifications</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="layout">
+    <div th:replace="~{patient/_sidebar :: patientSidebar('notifications')}"></div>
+
+    <section class="content">
+        <h2>Notifications</h2>
+
+        <ul class="list" th:if="${notifications != null and !#lists.isEmpty(notifications)}">
+            <li th:each="n : ${notifications}">
+                <div class="row">
+                    <div class="grow">
+                        <strong th:text="${n.type} ?: 'Notification'">Notification</strong>
+                        <div th:text="${n.message}">Message</div>
+                        <small th:text="${#temporals.format(n.createdAt, 'yyyy-MM-dd HH:mm')}">2025-10-20 09:30</small>
+                        <span class="tag" th:if="${n.read == true}">read</span>
+                        <span class="tag" th:if="${n.read != true}">unread</span>
+                    </div>
+                    <form th:if="${n.read != true}" th:action="@{/patient/notifications/mark-read}" method="post">
+                        <input type="hidden" name="notificationId" th:value="${n.notificationId}"/>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit">Mark read</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+
+        <div class="muted" th:if="${notifications == null or #lists.isEmpty(notifications)}">No notifications.</div>
+
+        <p><a class="btn" th:href="@{/patient}">Back to dashboard</a></p>
+    </section>
+</main>
+</body>
+</html>

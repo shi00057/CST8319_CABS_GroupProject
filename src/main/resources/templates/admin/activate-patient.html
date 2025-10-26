@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Activate Patients</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="layout">
+
+    <div th:replace="~{admin/_sidebar :: adminSidebar('activate')}"></div>
+
+    <section class="content">
+        <h2>Activate Patients</h2>
+        <a class="btn" th:href="@{/admin}">Back to Dashboard</a>
+
+        <div class="card">
+            <form class="form-inline" th:action="@{/admin/activate-patient}" method="get">
+                <input type="text" name="q" placeholder="Search by name or email" th:value="${q}"/>
+                <button type="submit">Search</button>
+            </form>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Registered At</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${pendingPatients}">
+                    <td th:text="${p.id != null ? p.id : '-'}">-</td>
+                    <td th:text="${p.fullName != null ? p.fullName : '-'}">-</td>
+                    <td th:text="${p.email != null ? p.email : '-'}">-</td>
+                    <td th:text="${p.createdAt != null ? #temporals.format(p.createdAt, 'yyyy-MM-dd') : '-'}">-</td>
+                    <td>
+                        <form th:action="@{/admin/activate-patient/{id}(id=${p.id})}" method="post">
+                            <button type="submit">Activate</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${(pendingPatients == null) or (#lists.isEmpty(pendingPatients))}">
+                    <td colspan="5">No pending patients.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

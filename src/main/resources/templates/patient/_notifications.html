@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="panel(notifications)" class="notif-bar">
+    <div class="notif-inner">
+        <h4>Unread Notifications</h4>
+        <div class="notif-list" th:if="${notifications != null}">
+            <div class="notif-item" th:each="n : ${notifications}">
+                <div class="notif-text">
+                    <strong th:text="${n.title}">Title</strong>
+                    <div th:text="${n.message}">Message goes here...</div>
+                    <small th:text="${#temporals.format(n.createdAt, 'yyyy-MM-dd HH:mm')}">2025-10-20 09:30</small>
+                </div>
+                <form method="post" th:action="@{/patient/notifications/mark-read}">
+                    <input type="hidden" name="notificationId" th:value="${n.id}"/>
+                    <button type="submit" class="btn-secondary">Mark as read</button>
+                </form>
+            </div>
+            <div th:if="${#lists.isEmpty(notifications)}">No unread notifications.</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

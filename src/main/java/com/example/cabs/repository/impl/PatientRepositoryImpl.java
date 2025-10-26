@@ -15,7 +15,7 @@ public class PatientRepositoryImpl {
         this.mapper = mapper;
     }
 
-    // new 5-arg version for stored procedure DABS_sp_RegisterPatient
+
     public Integer registerPatient(String email, byte[] passwordHash, byte[] salt, String fullName, String phone) {
         return mapper.registerPatient(email, passwordHash, salt, fullName, phone);
     }

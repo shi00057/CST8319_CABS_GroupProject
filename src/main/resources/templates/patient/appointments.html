@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Appointments</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<main class="layout">
+    <div th:replace="~{patient/_sidebar :: patientSidebar('appointments')}"></div>
+
+    <section class="content">
+        <h2>
+            Hello, <span th:text="${username} ?: ${#request.remoteUser}">Patient</span>.
+            <small>Today is <span th:text="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}">2025-10-20</span></small>
+        </h2>
+
+        <div class="card" th:if="${message}">
+            <div class="flash" th:text="${message}"></div>
+        </div>
+
+        <div class="card">
+            <h3>Upcoming & Past Appointments</h3>
+            <table class="list">
+                <thead>
+                <tr>
+                    <th>Appointment #</th>
+                    <th>Doctor</th>
+                    <th>Start (UTC)</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${appointments}">
+                    <td th:text="${a.apptId}">1001</td>
+                    <td th:text="${a.doctorName} ?: ${a.doctorId}">Dr. Smith</td>
+                    <td th:text="${#temporals.format(a.startUtc, 'yyyy-MM-dd''T''HH:mm:ss')}">2025-10-21T15:00:00</td>
+                    <td th:text="${a.status}">Booked</td>
+                    <td>
+                        <form method="post" th:action="@{/patient/cancel-form}" th:if="${a.cancellable == true}">
+                            <input type="hidden" name="apptId" th:value="${a.apptId}"/>
+                            <button type="submit">Cancel</button>
+                        </form>
+                        <span th:if="${a.cancellable != true}">—</span>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(appointments)}">
+                    <td colspan="5">No appointments found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p><a class="btn" th:href="@{/patient}">Back to Dashboard</a></p>
+    </section>
+</main>
+
+<div th:replace="~{patient/_notifications :: panel(${notifications})}"></div>
+<footer>© CST8319 Demo</footer>
+</body>
+</html>

@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${status} + ' ' + ${error}">Error</title>
+    <meta charset="UTF-8"/>
+    <title th:text="${status} + ' ' + (error != null ? error : 'Error')">Error</title>
 </head>
 <body>
 <div>
-    <h2 th:text="${status} + ' ' + ${error}">Error</h2>
-    <p th:text="${message}">Message</p>
-    <p th:text="${path}">Path</p>
-    <a th:href="@{/}">Home</a>
+    <h2 th:text="${status} + ' ' + (error != null ? error : 'Error')">Error</h2>
+
+    <p>
+        <strong>Message:</strong>
+        <span th:text="${message != null ? message : 'Something went wrong.'}">Something went wrong.</span>
+    </p>
+
+    <p>
+        <strong>Path:</strong>
+        <span th:text="${path != null ? path : '/'}">/</span>
+    </p>
+
+
+    <pre th:if="${trace != null}" th:text="${trace}">Trace...</pre>
+
+    <p><a th:href="@{/}">Home</a></p>
 </div>
 </body>
 </html>
