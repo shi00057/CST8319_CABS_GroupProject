@@ -7,12 +7,12 @@
         <div class="notif-list" th:if="${notifications != null}">
             <div class="notif-item" th:each="n : ${notifications}">
                 <div class="notif-text">
-                    <strong th:text="${n.title}">Title</strong>
+                    <strong th:text="${n.type} ?: 'Notification'">Notification</strong>
                     <div th:text="${n.message}">Message goes here...</div>
                     <small th:text="${#temporals.format(n.createdAt, 'yyyy-MM-dd HH:mm')}">2025-10-20 09:30</small>
                 </div>
                 <form method="post" th:action="@{/patient/notifications/mark-read}">
-                    <input type="hidden" name="notificationId" th:value="${n.id}"/>
+                    <input type="hidden" name="notificationId" th:value="${n.notificationId}"/>
                     <button type="submit" class="btn-secondary">Mark as read</button>
                 </form>
             </div>

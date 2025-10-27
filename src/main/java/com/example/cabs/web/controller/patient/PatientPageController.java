@@ -146,7 +146,9 @@ public class PatientPageController {
                                     Authentication auth) {
         model.addAttribute("username", auth != null ? auth.getName() : "Patient");
         Integer uid = userId(auth);
-        List<NotificationDto> items = notificationService.listForUser(uid, onlyUnread, top);
+        Boolean unread = (onlyUnread == null) ? false : onlyUnread;
+        Integer limit = (top == null || top <= 0) ? 50 : top;
+        List<NotificationDto> items = notificationService.listForUser(uid, unread, limit);
         model.addAttribute("notifications", items);
         return "patient/notifications";
     }
@@ -171,4 +173,10 @@ public class PatientPageController {
         String login = auth.getName();
         return userLookupMapper.findUserIdByLogin(login);
     }
+    @ModelAttribute("notifications")
+    public List<NotificationDto> notificationsModel(Authentication auth) {
+        Integer uid = userId(auth);
+        return (uid == null) ? List.of() : notificationService.listForUser(uid, true, 5);
+    }
+
 }
