@@ -46,15 +46,17 @@ public class DoctorController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/appointments")
+    @GetMapping("/appointments/data")
     public List<AppointmentDto> listAppointments(@RequestParam Integer doctorId,
                                                  @RequestParam(required = false)
                                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc) {
         if (fromUtc == null) {
             fromUtc = LocalDateTime.now().minusDays(30);
         }
-        return appointmentService.listAppointments(doctorId, null, fromUtc);
+        return appointmentService.listAppointmentsByDoctor(doctorId, fromUtc);
     }
+
+
 
     @PostMapping("/appointments/cancel")
     public ResponseEntity<Void> cancelAppointment(@RequestParam Long apptId,

@@ -24,7 +24,8 @@
                     <option th:each="d : ${doctors}"
                             th:value="${d.doctorId}"
                             th:selected="${doctor != null and d.doctorId == doctor.doctorId}"
-                            th:text="${d.name + ' (' + d.specialty + ')'}">
+<!--                            th:text="${d.name + ' (' + d.specialty + ')'}">-->
+                            th:text="${d.fullName + ' (' + d.specialty + ')'}">
                         Dr. Smith (Family)
                     </option>
                 </select>
@@ -39,7 +40,8 @@
         </div>
 
         <div class="card" th:if="${doctor != null}">
-            <h3 th:text="'Available Slots for ' + ${doctor.name}">Available Slots</h3>
+<!--            <h3 th:text="'Available Slots for ' + ${doctor.name}">Available Slots</h3>-->
+            <h3 th:text="'Available Slots for ' + ${doctor.fullName}">Available Slots</h3>
             <table class="list">
                 <thead>
                 <tr><th>Start (UTC)</th><th>End (UTC)</th><th>Action</th></tr>

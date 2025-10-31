@@ -6,11 +6,18 @@ import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DoctorAdminMapper {
     List<DoctorBasicDto> listDoctorsBasic();
-    int createDoctor(@Param("p_Email") String email);
+    Map<String, Object> createDoctor(@Param("p_Email") String email,
+                                     @Param("p_PasswordHash") byte[] passwordHash,
+                                     @Param("p_Salt") byte[] salt,
+                                     @Param("p_Name") String name,
+                                     @Param("p_Specialty") String specialty,
+                                     @Param("p_Phone") String phone,
+                                     @Param("p_IsActive") boolean isActive);
     int updateDoctor(@Param("p_DoctorId") Integer doctorId, @Param("p_Name") String name);
     int deleteDoctorSoft(@Param("p_DoctorId") Integer doctorId);
     Integer getDoctorIdByUserId(@Param("p_UserId") Integer userId);

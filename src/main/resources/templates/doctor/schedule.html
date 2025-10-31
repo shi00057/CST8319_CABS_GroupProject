@@ -6,7 +6,6 @@
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-
 <main class="layout">
     <div th:replace="~{doctor/_sidebar :: doctorSidebar('schedule')}"></div>
 
@@ -20,71 +19,45 @@
             <h3>Parameters</h3>
             <form th:action="@{/doctor/schedule/generate}" method="post" class="form-grid">
                 <div>
-                    <label for="startDate">Start Date</label>
-                    <input id="startDate" name="startDate" type="date" required>
+                    <label for="workDate">Date</label>
+                    <input id="workDate" name="workDate" type="date" required
+                           th:value="${workDate}">
                 </div>
                 <div>
-                    <label for="endDate">End Date</label>
-                    <input id="endDate" name="endDate" type="date" required>
+                    <label for="dayStart">Start Hour</label>
+                    <input id="dayStart" name="dayStart" type="time" step="3600" value="09:00" required>
                 </div>
                 <div>
-                    <label for="dayStart">Day Start</label>
-                    <input id="dayStart" name="dayStart" type="time" value="09:00" required>
+                    <label for="dayEnd">End Hour</label>
+                    <input id="dayEnd" name="dayEnd" type="time" step="3600" value="17:00" required>
                 </div>
-                <div>
-                    <label for="dayEnd">Day End</label>
-                    <input id="dayEnd" name="dayEnd" type="time" value="17:00" required>
-                </div>
-                <div>
-                    <label for="slotMinutes">Slot Length (minutes)</label>
-                    <input id="slotMinutes" name="slotMinutes" type="number" min="5" max="120" step="5" value="30" required>
-                </div>
-                <fieldset class="days-fieldset">
-                    <legend>Weekdays</legend>
-                    <label><input type="checkbox" name="days" value="1" checked> Mon</label>
-                    <label><input type="checkbox" name="days" value="2" checked> Tue</label>
-                    <label><input type="checkbox" name="days" value="3" checked> Wed</label>
-                    <label><input type="checkbox" name="days" value="4" checked> Thu</label>
-                    <label><input type="checkbox" name="days" value="5" checked> Fri</label>
-                    <label><input type="checkbox" name="days" value="6"> Sat</label>
-                    <label><input type="checkbox" name="days" value="7"> Sun</label>
-                </fieldset>
 
                 <div class="form-actions">
                     <button type="submit">Generate</button>
                 </div>
             </form>
 
-            <p class="muted" th:if="${message}" th:text="${message}">Generation result message...</p>
+            <p class="muted" th:if="${message}" th:text="${message}">Result</p>
         </div>
 
         <div class="card">
-            <h3>Upcoming Slots</h3>
+            <h3>Available Slots</h3>
             <table class="table" th:if="${slots}">
                 <thead>
                 <tr>
                     <th>Start</th>
                     <th>End</th>
-                    <th>Status</th>
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="s : ${slots}">
-                    <td th:text="${#temporals.format(s.startTime, 'yyyy-MM-dd HH:mm')}">2025-10-25 09:00</td>
-                    <td th:text="${#temporals.format(s.endTime, 'yyyy-MM-dd HH:mm')}">2025-10-25 09:30</td>
-                    <td th:text="${s.booked} ? 'Booked' : 'Free'">Free</td>
-                    <td>
-                        <form th:action="@{|/doctor/schedule/${s.id}/delete|}" method="post"
-                              th:if="${!s.booked}">
-                            <button type="submit">Remove</button>
-                        </form>
-                    </td>
+                    <td th:text="${#temporals.format(s.startUtc, 'yyyy-MM-dd HH:mm')}">2025-10-25 09:00</td>
+                    <td th:text="${#temporals.format(s.endUtc, 'yyyy-MM-dd HH:mm')}">2025-10-25 09:30</td>
                 </tr>
                 </tbody>
             </table>
             <p th:if="${slots == null or #lists.isEmpty(slots)}" class="muted">
-                No generated slots found.
+                No slots for the selected date.
             </p>
         </div>
     </section>

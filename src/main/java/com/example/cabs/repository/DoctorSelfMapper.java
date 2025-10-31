@@ -2,6 +2,7 @@ package com.example.cabs.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import com.example.cabs.dto.DoctorUpdateRequest;
 
 import java.time.LocalDate;
 
@@ -13,4 +14,6 @@ public interface DoctorSelfMapper {
                             @Param("p_EndHour") Integer endHour,
                             @Param("p_ByUserId") Integer byUserId,
                             @Param("p_Source") String source);
+    DoctorUpdateRequest getProfileByUserId(@Param("userId") Integer userId);
+    void updateDoctorSelf(DoctorUpdateRequest request);
 }

@@ -3,6 +3,38 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.cabs.repository.DoctorSelfMapper">
     <update id="doctorGenerateSlots" statementType="CALLABLE">
-        CALL DABS_sp_DoctorGenerateSlots(#{p_DoctorId}, #{p_WorkDate}, #{p_StartHour}, #{p_EndHour}, #{p_ByUserId}, #{p_Source})
+        CALL DABS_sp_DoctorGenerateSlots(
+            #{p_DoctorId},
+            #{p_WorkDate},
+            #{p_StartHour},
+            #{p_EndHour},
+            #{p_ByUserId},
+            #{p_Source}
+            )
+    </update>
+    <select id="getProfileByUserId" parameterType="int"
+            resultType="com.example.cabs.dto.DoctorUpdateRequest">
+        SELECT
+            d.DoctorId AS doctorId,
+            d.Name     AS name,
+            d.Specialty AS specialty,
+            d.Email    AS email,
+            d.Phone    AS phone
+        FROM Doctors d
+        WHERE d.UserId = #{userId}
+            LIMIT 1
+    </select>
+
+    <update id="updateDoctorSelf"
+            parameterType="com.example.cabs.dto.DoctorUpdateRequest">
+        CALL DABS_sp_UpdateDoctor(
+            #{doctorId},
+            #{name},
+            #{specialty},
+            #{email},
+            #{phone},
+            NULL
+            )
     </update>
 </mapper>
+

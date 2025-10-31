@@ -55,8 +55,9 @@ public class PatientServiceImpl implements PatientService {
     @Override
     @Transactional
     public void updatePatient(PatientUpdateRequest request) {
-        repo.updatePatient(request.getPatientId(), request.getFullName());
+        repo.updatePatient(request.getPatientId(), request.getFullName(), request.getPhone());
     }
+
 
     @Override
     @Transactional

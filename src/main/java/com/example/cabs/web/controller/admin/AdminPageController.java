@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,10 +50,18 @@ public class AdminPageController {
         model.addAttribute("username", auth != null ? auth.getName() : "Admin");
         List<PatientActivationDto> pending =
                 Objects.requireNonNullElseGet(patientService.listPatientsPendingActivation(), List::of);
+        if (q != null && !q.isBlank()) {
+            String s = q.trim().toLowerCase();
+            pending = pending.stream()
+                    .filter(p -> (p.getFullName() != null && p.getFullName().toLowerCase().contains(s))
+                            || (p.getEmail() != null && p.getEmail().toLowerCase().contains(s)))
+                    .toList();
+        }
         model.addAttribute("pendingPatients", pending);
         model.addAttribute("q", q);
         return "admin/activate-patient";
     }
+
 
     @PostMapping("/activate-patient/{userId}")
     public String activatePatient(@PathVariable Integer userId,
@@ -73,9 +81,29 @@ public class AdminPageController {
 
     @PostMapping("/register-doctor")
     public String registerDoctorSubmit(@RequestParam String email,
+                                       @RequestParam String fullName,
+                                       @RequestParam(required = false) String specialty,
+                                       @RequestParam(required = false) String phone,
+                                       @RequestParam String password,
+                                       @RequestParam(required = false, defaultValue = "true") Boolean isActive,
                                        RedirectAttributes ra) {
-        doctorService.createDoctor(email);
-        ra.addFlashAttribute("message", "Doctor registered.");
+        if (email == null || email.isBlank() || fullName == null || fullName.isBlank() || password == null || password.isBlank()) {
+            ra.addFlashAttribute("error", "Email, full name and password are required.");
+            return "redirect:/admin/register-doctor";
+        }
+        try {
+            com.example.cabs.dto.AdminCreateDoctorRequest req = new com.example.cabs.dto.AdminCreateDoctorRequest();
+            req.setEmail(email.trim());
+            req.setFullName(fullName.trim());
+            req.setSpecialty(specialty);
+            req.setPhone(phone);
+            req.setPassword(password);
+            req.setIsActive(isActive);
+            doctorService.createDoctor(req);
+            ra.addFlashAttribute("message", "Doctor registered.");
+        } catch (Exception ex) {
+            ra.addFlashAttribute("error", "Failed to register doctor.");
+        }
         return "redirect:/admin/register-doctor";
     }
 
@@ -91,14 +119,29 @@ public class AdminPageController {
     public String generateSlotsSubmit(@RequestParam Integer doctorId,
                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                      @RequestParam(required = false, defaultValue = "30") Integer slotMinutes,
                                       Authentication auth,
                                       RedirectAttributes ra) {
+        if (doctorId == null) {
+            ra.addFlashAttribute("error", "Doctor is required.");
+            return "redirect:/admin/generate-slots";
+        }
+        if (endDate.isBefore(startDate)) {
+            ra.addFlashAttribute("error", "Invalid date range.");
+            return "redirect:/admin/generate-slots";
+        }
         Integer adminUserId = currentUserId(auth);
-        int startHour = 9, endHour = 17;
-        doctorService.adminGenerateSlotsRange(doctorId, startDate, endDate, startHour, endHour, adminUserId);
-        ra.addFlashAttribute("generatedCount", 0);
-        ra.addFlashAttribute("message", "Slots generated.");
+        int startHour = 9;
+        int endHour = 17;
+        try {
+            doctorService.adminGenerateSlotsRange(doctorId, startDate, endDate, startHour, endHour, adminUserId);
+            long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+            int slotsPerDay = ((endHour - startHour) * 60) / 30;
+            long expected = Math.max(0, days * slotsPerDay);
+            ra.addFlashAttribute("generatedCount", expected);
+            ra.addFlashAttribute("message", "Slots generated.");
+        } catch (Exception ex) {
+            ra.addFlashAttribute("error", "Failed to generate slots.");
+        }
         return "redirect:/admin/generate-slots";
     }
 
@@ -113,19 +156,24 @@ public class AdminPageController {
         List<AppointmentDto> items =
                 Objects.requireNonNullElseGet(appointmentService.listAppointments(doctorId, patientId, fromUtc), List::of);
         model.addAttribute("appointments", items);
+        model.addAttribute("doctorId", doctorId);
+        model.addAttribute("patientId", patientId);
+        model.addAttribute("fromUtc", fromUtc);
         return "admin/appointments";
     }
 
+
     @PostMapping("/appointments/{apptId}/cancel")
     public String cancelAppointmentAsAdmin(@PathVariable Long apptId,
+                                           @RequestParam(required = false, defaultValue = "Admin cancel") String reason,
                                            Authentication auth,
                                            RedirectAttributes ra) {
         Integer adminUserId = currentUserId(auth);
-        // TODO: implement a dedicated admin cancel in service; temporary no-op to avoid 500 if not implemented yet.
-        // appointmentService.cancelAppointmentByAdmin(apptId, adminUserId);
+        appointmentService.cancelAppointmentByAdmin(apptId, adminUserId, reason);
         ra.addFlashAttribute("message", "Appointment canceled.");
         return "redirect:/admin/appointments";
     }
+
 
     @GetMapping("/reports")
     public String reportsPage(@RequestParam(required = false) String type,

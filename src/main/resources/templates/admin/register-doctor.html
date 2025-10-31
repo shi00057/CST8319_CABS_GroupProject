@@ -13,11 +13,34 @@
         <h2>Register Doctor</h2>
         <a class="btn" th:href="@{/admin}">Back to Dashboard</a>
 
+        <div th:if="${message}" class="alert success" th:text="${message}"></div>
+        <div th:if="${error}" class="alert error" th:text="${error}"></div>
+
         <div class="card">
             <form th:action="@{/admin/register-doctor}" method="post" class="form-grid">
                 <label>
+                    Full Name
+                    <input type="text" name="fullName" required/>
+                </label>
+                <label>
                     Email
                     <input type="email" name="email" required/>
+                </label>
+                <label>
+                    Specialty
+                    <input type="text" name="specialty"/>
+                </label>
+                <label>
+                    Phone
+                    <input type="text" name="phone"/>
+                </label>
+                <label>
+                    Password
+                    <input type="password" name="password" required/>
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="isActive" checked/>
+                    Activate now
                 </label>
                 <div class="form-actions">
                     <button type="submit">Create</button>

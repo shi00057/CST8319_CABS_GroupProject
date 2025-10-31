@@ -1,5 +1,6 @@
 package com.example.cabs.service.impl;
 
+import com.example.cabs.dto.AdminCreateDoctorRequest;
 import com.example.cabs.dto.DoctorBasicDto;
 import com.example.cabs.dto.DoctorUpdateRequest;
 import com.example.cabs.repository.impl.DoctorAdminRepositoryImpl;
@@ -8,6 +9,9 @@ import com.example.cabs.service.DoctorService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,7 +33,24 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional
     public void createDoctor(String email) {
-        adminRepo.createDoctor(email);
+        adminRepo.createDoctorEmailOnly(email);
+    }
+
+    @Override
+    @Transactional
+    public void createDoctor(AdminCreateDoctorRequest request) {
+        byte[] salt = generateSalt(32);
+        byte[] hash = pbkdf2(request.getPassword(), salt, 120000, 256);
+        boolean active = request.getIsActive() == null ? true : request.getIsActive();
+        adminRepo.createDoctorFull(
+                request.getEmail().trim(),
+                request.getFullName(),
+                request.getSpecialty(),
+                request.getPhone(),
+                hash,
+                salt,
+                active
+        );
     }
 
     @Override
@@ -61,16 +82,49 @@ public class DoctorServiceImpl implements DoctorService {
         adminRepo.adminGenerateSlotsRange(doctorId, fromDate, toDate, startHour, endHour, adminUserId);
     }
 
+//    @Override
+//    @Transactional
+//    public void doctorGenerateSlots(Integer doctorId, LocalDate workDate, Integer startHour, Integer endHour, Integer byUserId) {
+//        selfRepo.doctorGenerateSlots(doctorId, workDate, startHour, endHour, byUserId, "SELF");
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void doctorGenerateSlotsByUser(Integer doctorUserId, LocalDate workDate, Integer startHour, Integer endHour, Integer byUserId) {
+//        Integer doctorId = adminRepo.getDoctorIdByUserId(doctorUserId);
+//        selfRepo.doctorGenerateSlots(doctorId, workDate, startHour, endHour, byUserId, "SELF");
+//    }
     @Override
     @Transactional
     public void doctorGenerateSlots(Integer doctorId, LocalDate workDate, Integer startHour, Integer endHour, Integer byUserId) {
-        selfRepo.doctorGenerateSlots(doctorId, workDate, startHour, endHour, byUserId, "SELF");
+        selfRepo.doctorGenerateSlots(doctorId, workDate, startHour, endHour, byUserId);
     }
 
     @Override
     @Transactional
     public void doctorGenerateSlotsByUser(Integer doctorUserId, LocalDate workDate, Integer startHour, Integer endHour, Integer byUserId) {
         Integer doctorId = adminRepo.getDoctorIdByUserId(doctorUserId);
-        selfRepo.doctorGenerateSlots(doctorId, workDate, startHour, endHour, byUserId, "SELF");
+        selfRepo.doctorGenerateSlots(doctorId, workDate, startHour, endHour, byUserId);
+    }
+
+    @Override
+    public DoctorUpdateRequest getMyProfile(Integer userId) {
+        return selfRepo.getProfileByUserId(userId);
+    }
+
+    private static byte[] generateSalt(int size) {
+        byte[] s = new byte[size];
+        new SecureRandom().nextBytes(s);
+        return s;
+    }
+
+    private static byte[] pbkdf2(String password, byte[] salt, int iterations, int keyLenBits) {
+        try {
+            PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, keyLenBits);
+            SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            return skf.generateSecret(spec).getEncoded();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

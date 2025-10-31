@@ -19,8 +19,12 @@ public class DoctorAdminRepositoryImpl {
         return mapper.listDoctorsBasic();
     }
 
-    public void createDoctor(String email) {
-        mapper.createDoctor(email);
+    public void createDoctorEmailOnly(String email) {
+        mapper.createDoctor(email, null, null, null, null, null, true);
+    }
+
+    public void createDoctorFull(String email, String fullName, String specialty, String phone, byte[] passwordHash, byte[] salt, boolean isActive) {
+        mapper.createDoctor(email, passwordHash, salt, fullName, specialty, phone, isActive);
     }
 
     public void updateDoctor(Integer doctorId, String name) {

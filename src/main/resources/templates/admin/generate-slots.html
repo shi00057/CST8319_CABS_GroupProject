@@ -13,13 +13,17 @@
         <h2>Generate Doctor Slots</h2>
         <a class="btn" th:href="@{/admin}">Back to Dashboard</a>
 
+        <div class="card" th:if="${error}">
+            <p class="error" th:text="${error}">Error</p>
+        </div>
+
         <div class="card">
             <form th:action="@{/admin/generate-slots}" method="post" class="form-grid">
                 <label>
                     Doctor
                     <select name="doctorId" required>
                         <option value="" disabled selected>Select a doctor</option>
-                        <option th:each="d : ${doctors}" th:value="${d.id}" th:text="${d.fullName}">Dr. A</option>
+                        <option th:each="d : ${doctors}" th:value="${d.doctorId}" th:text="${d.fullName}">Dr. A</option>
                     </select>
                 </label>
                 <label>
@@ -29,10 +33,6 @@
                 <label>
                     End Date
                     <input type="date" name="endDate" required/>
-                </label>
-                <label>
-                    Slot Minutes
-                    <input type="number" name="slotMinutes" min="5" step="5" value="30" required/>
                 </label>
                 <div class="form-actions">
                     <button type="submit">Generate</button>
@@ -49,5 +49,15 @@
     </section>
 </main>
 <footer>© CST8319 Demo</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var s = document.querySelector('input[name="startDate"]');
+        var e = document.querySelector('input[name="endDate"]');
+        var today = new Date().toISOString().slice(0,10);
+        if (s && !s.value) s.value = today;
+        if (e && !e.value) e.value = today;
+    });
+</script>
 </body>
 </html>

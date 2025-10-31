@@ -11,6 +11,13 @@ public class AppointmentDto {
     private String status;
     private String doctorName;
     private Boolean cancellable;
+    private String patientName;
+    private String notes;
+
+    public String getPatientName() { return patientName; }
+    public void setPatientName(String patientName) { this.patientName = patientName; }
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 
     public Long getApptId() { return apptId; }
     public void setApptId(Long apptId) { this.apptId = apptId; }

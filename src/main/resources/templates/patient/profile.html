@@ -6,7 +6,6 @@
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-
 <main class="layout">
     <div th:replace="~{patient/_sidebar :: patientSidebar('profile')}"></div>
 
@@ -19,17 +18,14 @@
         <div class="card">
             <h3>View / Update Profile</h3>
             <form method="post" th:action="@{/patient/profile}">
+                <input type="hidden" name="patientId" th:value="${profile.patientId}"/>
                 <div>
-                    <label>First Name</label>
-                    <input type="text" name="firstName" th:value="${profile.firstName}" required/>
-                </div>
-                <div>
-                    <label>Last Name</label>
-                    <input type="text" name="lastName" th:value="${profile.lastName}" required/>
+                    <label>Full Name</label>
+                    <input type="text" name="fullName" th:value="${profile.fullName}" required/>
                 </div>
                 <div>
                     <label>Email</label>
-                    <input type="email" name="email" th:value="${profile.email}" required readonly/>
+                    <input type="email" name="emailDisplay" th:value="${email}" readonly/>
                 </div>
                 <div>
                     <label>Phone</label>

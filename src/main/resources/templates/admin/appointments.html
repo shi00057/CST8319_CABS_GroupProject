@@ -15,9 +15,10 @@
 
         <div class="card">
             <form class="form-inline" th:action="@{/admin/appointments}" method="get">
-                <input type="number" name="doctorId" min="1" placeholder="Doctor ID"/>
-                <input type="number" name="patientId" min="1" placeholder="Patient ID"/>
-                <input type="datetime-local" name="fromUtc" placeholder="From (UTC)"/>
+                <input type="number" name="doctorId" min="1" placeholder="Doctor ID"
+                       th:value="${doctorId}"/>
+                <input type="number" name="patientId" min="1" placeholder="Patient ID"
+                       th:value="${patientId}"/>
                 <button type="submit">Filter</button>
             </form>
 
@@ -35,20 +36,35 @@
                 </thead>
                 <tbody>
                 <tr th:each="a : ${appointments}">
-                    <td th:text="${a.id} ?: '-'">-</td>
-                    <td th:text="${a.startTime != null ? #temporals.format(a.startTime, 'yyyy-MM-dd') : '-'}">-</td>
-                    <td th:text="${a.startTime != null and a.endTime != null ? #temporals.format(a.startTime, 'HH:mm') + ' - ' + #temporals.format(a.endTime, 'HH:mm') : '-'}">-</td>
+                    <!-- Appt ID -->
+                    <td th:text="${a.apptId} ?: '-'">-</td>
+
+                    <!-- Date -->
+                    <td th:text="${#temporals.format(a.startUtc, 'yyyy-MM-dd')}">-</td>
+
+                    <!-- Time -->
+                    <td th:text="${#temporals.format(a.startUtc, 'HH:mm')}">-</td>
+
+                    <!-- Doctor -->
                     <td th:text="${a.doctorName} ?: '-'">-</td>
-                    <td th:text="${a.patientName} ?: '-'">-</td>
+
+                    <!-- Patient ID） -->
+                    <td th:text="${a.patientId} ?: '-'">-</td>
+
+                    <!-- Status -->
                     <td th:text="${a.status} ?: '-'">-</td>
+
+                    <!-- Action -->
                     <td>
-                        <form th:if="${a.cancellable == true}"
-                              th:action="@{|/admin/appointments/${a.id}/cancel|}"
-                              method="post">
-                            <input type="hidden" name="doctorId" th:value="${a.doctorId}"/>
-                            <button type="submit">Cancel</button>
+                        <form th:if="${a.cancellable}"
+                              th:action="@{'/admin/appointments/' + ${a.apptId} + '/cancel'}"
+                              method="post" style="display:inline">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Cancel appt #' + [[${a.apptId}]] + '?');">
+                                Cancel
+                            </button>
                         </form>
-                        <span th:if="${a.cancellable != true}">-</span>
+                        <span th:unless="${a.cancellable}" class="muted">—</span>
                     </td>
                 </tr>
 
@@ -56,6 +72,7 @@
                     <td colspan="7">No appointments found.</td>
                 </tr>
                 </tbody>
+
             </table>
         </div>
     </section>

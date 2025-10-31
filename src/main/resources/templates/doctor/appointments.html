@@ -17,7 +17,7 @@
         </header>
 
         <div class="card">
-            <table class="table" th:if="${appointments}">
+            <table class="table" th:if="${appointments != null and !#lists.isEmpty(appointments)}">
                 <thead>
                 <tr>
                     <th>Date/Time</th>
@@ -29,15 +29,14 @@
                 </thead>
                 <tbody>
                 <tr th:each="a : ${appointments}">
-                    <td th:text="${#temporals.format(a.startTime, 'yyyy-MM-dd HH:mm')}">2025-10-26 10:00</td>
+                    <td th:text="${#temporals.format(a.startUtc, 'yyyy-MM-dd HH:mm')}">2025-10-26 10:00</td>
                     <td th:text="${a.patientName}">John Doe</td>
                     <td th:text="${a.status}">Scheduled</td>
                     <td th:text="${a.notes}">N/A</td>
                     <td>
-                        <form th:action="@{|/doctor/appointments/${a.id}/cancel|}" method="post"
-                              th:if="${a.cancellable}">
-                            <button type="submit"
-                                    onclick="return confirm('Cancel this appointment?');">Cancel</button>
+                        <form th:action="@{|/doctor/appointments/${a.apptId}/cancel|}" method="post" th:if="${a.cancellable}">
+                            <input type="hidden" name="doctorId" th:value="${a.doctorId}"/>
+                            <button type="submit" onclick="return confirm('Cancel this appointment?');">Cancel</button>
                         </form>
                     </td>
                 </tr>

@@ -5,6 +5,7 @@ import com.example.cabs.dto.DoctorUpdateRequest;
 import com.example.cabs.dto.SlotDto;
 import com.example.cabs.service.AppointmentService;
 import com.example.cabs.service.DoctorService;
+import com.example.cabs.repository.UserLookupMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,18 +16,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/doctor")
 public class DoctorPageController {
     private final DoctorService doctorService;
+    private final UserLookupMapper userLookupMapper;
     private final AppointmentService appointmentService;
 
-    public DoctorPageController(DoctorService doctorService, AppointmentService appointmentService) {
+    public DoctorPageController(DoctorService doctorService,
+                                AppointmentService appointmentService,
+                                UserLookupMapper userLookupMapper) {
         this.doctorService = doctorService;
         this.appointmentService = appointmentService;
+        this.userLookupMapper = userLookupMapper;
     }
 
     @GetMapping
@@ -36,54 +40,51 @@ public class DoctorPageController {
     }
 
     @GetMapping("/schedule")
-    public String schedulePage(@RequestParam(required = false) Integer doctorId,
-                               @RequestParam(required = false)
+    public String schedulePage(@RequestParam(required = false)
                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate workDate,
                                Model model, Authentication auth) {
         model.addAttribute("username", auth != null ? auth.getName() : "Doctor");
-        if (doctorId != null && workDate != null) {
-            List<SlotDto> slots = appointmentService.listAvailableSlots(doctorId, workDate);
-            model.addAttribute("slots", slots);
-        }
+        Integer uid = userId(auth);
+        Integer did = uid != null ? doctorService.getDoctorIdByUserId(uid) : null;
+        LocalDate date = (workDate != null ? workDate : LocalDate.now());
+        model.addAttribute("workDate", date);
+        List<SlotDto> slots = (did != null) ? appointmentService.listAvailableSlots(did, date) : List.of();
+        model.addAttribute("slots", slots);
         return "doctor/schedule";
     }
 
     @PostMapping("/schedule/generate")
-    public String generateSlotsViaForm(@RequestParam Integer doctorId,
-                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+    public String generateSlotsViaForm(@RequestParam
+                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate workDate,
                                        @RequestParam String dayStart,
                                        @RequestParam String dayEnd,
-                                       @RequestParam(required = false) Integer slotMinutes,
-                                       @RequestParam(name = "days", required = false) List<Integer> days,
                                        Authentication auth,
                                        RedirectAttributes ra) {
         Integer byUserId = userId(auth);
-        if (days == null || days.isEmpty()) {
-            days = Arrays.asList(1, 2, 3, 4, 5);
-        }
+        Integer doctorUserId = byUserId;
+        Integer doctorId = (doctorUserId != null) ? doctorService.getDoctorIdByUserId(doctorUserId) : null;
+
         int startHour = LocalTime.parse(dayStart).getHour();
         int endHour = LocalTime.parse(dayEnd).getHour();
-        LocalDate d = startDate;
-        while (!d.isAfter(endDate)) {
-            int dow = d.getDayOfWeek().getValue();
-            if (days.contains(dow)) {
-                doctorService.doctorGenerateSlots(doctorId, d, startHour, endHour, byUserId);
-            }
-            d = d.plusDays(1);
+
+        if (doctorId != null) {
+            doctorService.doctorGenerateSlots(doctorId, workDate, startHour, endHour, byUserId);
         }
+
         ra.addFlashAttribute("message", "Slots generated.");
-        return "redirect:/doctor/schedule?doctorId=" + doctorId + "&workDate=" + startDate;
+        return "redirect:/doctor/schedule?workDate=" + workDate;
     }
 
-    @GetMapping("/appointments-page")
-    public String appointmentsPage(@RequestParam Integer doctorId,
+    @GetMapping("/appointments")
+    public String appointmentsPage(@RequestParam(required = false) Integer doctorId,
                                    @RequestParam(required = false)
                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc,
                                    Model model, Authentication auth) {
         model.addAttribute("username", auth != null ? auth.getName() : "Doctor");
         if (fromUtc == null) fromUtc = LocalDateTime.now().minusDays(30);
-        List<AppointmentDto> items = appointmentService.listAppointments(doctorId, null, fromUtc);
+        Integer uid = userId(auth);
+        Integer did = doctorId != null ? doctorId : (uid != null ? doctorService.getDoctorIdByUserId(uid) : null);
+        List<AppointmentDto> items = did != null ? appointmentService.listAppointmentsByDoctor(did, fromUtc) : List.of();
         model.addAttribute("appointments", items);
         return "doctor/appointments";
     }
@@ -96,13 +97,23 @@ public class DoctorPageController {
         Integer byUserId = userId(auth);
         appointmentService.cancelAppointmentForDoctor(apptId, doctorId, byUserId);
         ra.addFlashAttribute("message", "Appointment canceled.");
-        return "redirect:/doctor/appointments-page?doctorId=" + doctorId;
+        return "redirect:/doctor/appointments?doctorId=" + doctorId;
     }
 
     @GetMapping("/profile")
     public String profilePage(Model model, Authentication auth) {
         model.addAttribute("username", auth != null ? auth.getName() : "Doctor");
-        model.addAttribute("doctor", null);
+        Integer uid = userId(auth);
+        DoctorUpdateRequest vm = (uid != null) ? doctorService.getMyProfile(uid) : null;
+        if (vm == null) vm = new DoctorUpdateRequest();
+        if (vm.getDoctorId() == null && uid != null) {
+            Integer did = doctorService.getDoctorIdByUserId(uid);
+            vm.setDoctorId(did);
+        }
+        if (vm.getEmail() == null && auth != null) {
+            vm.setEmail(auth.getName());
+        }
+        model.addAttribute("doctor", vm);
         return "doctor/profile";
     }
 
@@ -110,12 +121,24 @@ public class DoctorPageController {
     public String updateProfileViaForm(@ModelAttribute DoctorUpdateRequest request,
                                        Authentication auth,
                                        RedirectAttributes ra) {
+        Integer uid = userId(auth);
+        if (request.getDoctorId() == null && uid != null) {
+            Integer did = doctorService.getDoctorIdByUserId(uid);
+            request.setDoctorId(did);
+        }
         doctorService.updateDoctor(request);
         ra.addFlashAttribute("message", "Profile updated.");
         return "redirect:/doctor/profile";
     }
 
     private Integer userId(Authentication auth) {
-        return null;
+        if (auth == null) return null;
+        Object p = auth.getPrincipal();
+        if (p instanceof com.example.cabs.domain.User u) {
+            Long v = u.getUserId();
+            return v == null ? null : v.intValue();
+        }
+        String login = auth.getName();
+        return userLookupMapper.findUserIdByLogin(login);
     }
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Contact Us</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .form { max-width: 720px; margin: 2rem auto; padding: 1rem; background: var(--surface,#fff); border: 1px solid var(--border,#e5e7eb); border-radius: 12px; }
+        .row { margin-bottom: .75rem; }
+        label { display:block; margin-bottom:.25rem; font-weight:600; }
+        input, textarea { width:100%; padding:.6rem .8rem; border:1px solid #d1d5db; border-radius:8px; }
+        button { margin-right:.5rem; }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="nav">
+        <a class="brand" th:href="@{/}">CABS</a>
+    </nav>
+</header>
+<main>
+    <section class="form">
+        <h2>Contact Us</h2>
+        <p>Public users can send us a message without logging in.</p>
+
+        <form id="contactForm" autocomplete="on">
+            <div class="row">
+                <label for="name">Your Name</label>
+                <input id="name" name="name" type="text" required/>
+            </div>
+            <div class="row">
+                <label for="email">Your Email</label>
+                <input id="email" name="email" type="email" required/>
+            </div>
+            <div class="row">
+                <label for="subject">Subject</label>
+                <input id="subject" name="subject" type="text" placeholder="CABS Contact"/>
+            </div>
+            <div class="row">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="6" required></textarea>
+            </div>
+            <div class="row">
+                <button type="submit">Send via Mail App</button>
+                <a id="fallbackLink" href="#" style="display:none;">Open mail app (fallback)</a>
+                <button type="button" onclick="history.back()">Back</button>
+            </div>
+            <p style="font-size:.9rem;color:#666;">
+                Tip: To open in Outlook, set Outlook as your default mail application (mailto handler) in your OS.
+            </p>
+        </form>
+    </section>
+</main>
+<footer>© CST8319 Demo</footer>
+
+<script>
+    (function () {
+        const TO = 'osmanm@algonquincollege.com';
+        const form = document.getElementById('contactForm');
+        const fallback = document.getElementById('fallbackLink');
+
+        function buildMailto() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value.trim() || 'CABS Contact';
+            const message = document.getElementById('message').value.trim();
+
+            const bodyLines = [
+                `From: ${name}`,
+                `Email: ${email}`,
+                '',
+                message
+            ];
+
+            const mailto = `mailto:${TO}` +
+                `?subject=${encodeURIComponent(subject)}` +
+                `&body=${encodeURIComponent(bodyLines.join('\r\n'))}`;
+            return mailto;
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const url = buildMailto();
+
+            // Open default mail app (Outlook if set as default)
+            window.location.href = url;
+
+            // Show a visible fallback link in case the browser blocks automatic open
+            fallback.href = url;
+            fallback.style.display = 'inline-block';
+        });
+    })();
+</script>
+</body>
+</html>

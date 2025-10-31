@@ -24,7 +24,9 @@ public interface PatientMapper {
                      @Param("isActive") Boolean isActive);
 
     int updatePatient(@Param("patientId") Integer patientId,
-                      @Param("fullName") String fullName);
+                      @Param("fullName") String fullName,
+                      @Param("phone") String phone);
+
 
     int deletePatientSoft(@Param("patientId") Integer patientId);
 }

@@ -9,6 +9,7 @@ import com.example.cabs.service.AppointmentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,13 +43,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         apptRepo.bookAppointment(doctorId, patientId, startUtc);
     }
 
-//    @Override
-//    @Transactional
-//    public void bookAppointmentForPatientUser(Integer doctorId, Integer patientUserId, LocalDateTime startUtc) {
-//        Integer patientId = patientRepo.getPatientIdByUserId(patientUserId);
-//        apptRepo.bookAppointment(doctorId, patientId, startUtc);
-//    }
-
     @Override
     @Transactional
     public void bookAppointmentForPatientUser(Integer doctorId, Integer patientUserId, LocalDateTime startUtc, LocalDateTime endUtc) {
@@ -68,25 +62,56 @@ public class AppointmentServiceImpl implements AppointmentService {
         Integer patientId = patientRepo.getPatientIdByUserId(patientUserId);
         apptRepo.cancelAppointment(apptId, patientId, byUserId);
     }
+
     @Override
     @Transactional
     public void cancelAppointmentForDoctor(Long apptId, Integer doctorId, Integer byUserId) {
         apptRepo.cancelAppointmentByDoctor(apptId, doctorId, byUserId);
     }
 
-
     @Override
     public List<AppointmentDto> listAppointments(Integer doctorId, Integer patientId, LocalDateTime fromUtc) {
-        return apptRepo.listAppointments(doctorId, patientId, fromUtc);
+        List<AppointmentDto> items;
+        if (doctorId != null && patientId == null) {
+            items = apptRepo.listAppointmentsByDoctor(doctorId, fromUtc);
+        } else if (patientId != null && doctorId == null) {
+            items = apptRepo.listAppointmentsByPatient(patientId, fromUtc);
+        } else {
+            items = apptRepo.listAppointments(doctorId, patientId, fromUtc);
+        }
+        markCancellable(items);
+        return items;
     }
 
     @Override
     public List<AppointmentDto> listAppointmentsByDoctor(Integer doctorId, LocalDateTime fromUtc) {
-        return apptRepo.listAppointmentsByDoctor(doctorId, fromUtc);
+        List<AppointmentDto> items = apptRepo.listAppointmentsByDoctor(doctorId, fromUtc);
+        markCancellable(items);
+        return items;
     }
 
     @Override
     public List<AppointmentDto> listAppointmentsByPatient(Integer patientId, LocalDateTime fromUtc) {
-        return apptRepo.listAppointmentsByPatient(patientId, fromUtc);
+        List<AppointmentDto> items = apptRepo.listAppointmentsByPatient(patientId, fromUtc);
+        markCancellable(items);
+        return items;
+    }
+
+    @Override
+    @Transactional
+    public void cancelAppointmentByAdmin(Long apptId, Integer adminUserId, String reason) {
+        apptRepo.cancelAppointmentByAdmin(apptId, adminUserId, reason);
+    }
+
+    private void markCancellable(List<AppointmentDto> items) {
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+        for (AppointmentDto a : items) {
+            boolean can = a != null
+                    && a.getStartUtc() != null
+                    && a.getStatus() != null
+                    && "Booked".equalsIgnoreCase(a.getStatus())
+                    && a.getStartUtc().isAfter(now);
+            a.setCancellable(can);
+        }
     }
 }

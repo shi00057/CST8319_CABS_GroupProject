@@ -18,4 +18,5 @@ public interface AppointmentService {
     List<AppointmentDto> listAppointments(Integer doctorId, Integer patientId, LocalDateTime fromUtc);
     List<AppointmentDto> listAppointmentsByDoctor(Integer doctorId, LocalDateTime fromUtc);
     List<AppointmentDto> listAppointmentsByPatient(Integer patientId, LocalDateTime fromUtc);
+    void cancelAppointmentByAdmin(Long apptId, Integer adminUserId, String reason);
 }

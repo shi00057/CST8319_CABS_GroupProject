@@ -1,26 +1,69 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.cabs.repository.DoctorAdminMapper">
-    <select id="listDoctorsBasic" resultType="com.example.cabs.dto.DoctorBasicDto" statementType="CALLABLE">
-        CALL DABS_sp_ListDoctorsBasic()
+
+    <resultMap id="DoctorBasicDtoMap" type="com.example.cabs.dto.DoctorBasicDto">
+        <result property="doctorId" column="DoctorId"/>
+        <result property="fullName" column="Name"/>
+        <result property="specialty" column="Specialty"/>
+        <result property="email" column="Email"/>
+        <result property="phone" column="Phone"/>
+    </resultMap>
+
+    <select id="listDoctorsBasic" resultMap="DoctorBasicDtoMap" statementType="CALLABLE">
+        { CALL DABS_sp_ListDoctorsBasic() }
     </select>
-    <update id="createDoctor" statementType="CALLABLE">
-        CALL DABS_sp_CreateDoctor(#{p_Email})
+
+    <select id="getDoctorIdByUserId" parameterType="int" resultType="int" statementType="CALLABLE">
+        { CALL DABS_sp_GetDoctorIdByUserId(#{p_UserId,jdbcType=INTEGER}) }
+    </select>
+
+    <select id="createDoctor" resultType="map" statementType="CALLABLE">
+        { CALL DABS_sp_CreateDoctor(
+                #{p_Email,jdbcType=VARCHAR},
+                #{p_PasswordHash,jdbcType=VARBINARY},
+                #{p_Salt,jdbcType=VARBINARY},
+                #{p_Name,jdbcType=VARCHAR},
+                #{p_Specialty,jdbcType=VARCHAR},
+                #{p_Phone,jdbcType=VARCHAR},
+                #{p_IsActive,jdbcType=TINYINT}
+               )
+            }
+    </select>
+
+    <update id="updateDoctor">
+        UPDATE Doctors
+        SET Name = #{p_Name,jdbcType=VARCHAR}, UpdatedAt = CURRENT_TIMESTAMP(3)
+        WHERE DoctorId = #{p_DoctorId,jdbcType=INTEGER}
     </update>
-    <update id="updateDoctor" statementType="CALLABLE">
-        CALL DABS_sp_UpdateDoctor(#{p_DoctorId}, #{p_Name})
-    </update>
+
     <update id="deleteDoctorSoft" statementType="CALLABLE">
-        CALL DABS_sp_DeleteDoctorSoft(#{p_DoctorId})
+        { CALL DABS_sp_DeleteDoctorSoft(#{p_DoctorId,jdbcType=INTEGER}) }
     </update>
-    <select id="getDoctorIdByUserId" resultType="int" statementType="CALLABLE">
-        CALL DABS_sp_GetDoctorIdByUserId(#{p_UserId})
-    </select>
+
     <update id="adminGenerateSlots" statementType="CALLABLE">
-        CALL DABS_sp_AdminGenerateSlots(#{p_DoctorId}, #{p_WorkDate}, #{p_StartHour}, #{p_EndHour}, #{p_AdminUserId})
+        { CALL DABS_sp_AdminGenerateSlots(
+                #{p_DoctorId,jdbcType=INTEGER},
+                #{p_WorkDate,jdbcType=DATE},
+                #{p_StartHour,jdbcType=TINYINT},
+                #{p_EndHour,jdbcType=TINYINT},
+                #{p_AdminUserId,jdbcType=INTEGER}
+               )
+            }
     </update>
+
     <update id="adminGenerateSlotsRange" statementType="CALLABLE">
-        CALL DABS_sp_AdminGenerateSlotsRange(#{p_DoctorId}, #{p_FromDate}, #{p_ToDate}, #{p_StartHour}, #{p_EndHour}, #{p_AdminUserId})
+        { CALL DABS_sp_AdminGenerateSlotsRange(
+                #{p_DoctorId,jdbcType=INTEGER},
+                #{p_FromDate,jdbcType=DATE},
+                #{p_ToDate,jdbcType=DATE},
+                #{p_StartHour,jdbcType=TINYINT},
+                #{p_EndHour,jdbcType=TINYINT},
+                #{p_AdminUserId,jdbcType=INTEGER}
+               )
+            }
     </update>
+
 </mapper>

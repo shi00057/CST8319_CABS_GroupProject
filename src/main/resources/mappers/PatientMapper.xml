@@ -61,9 +61,11 @@
             parameterType="map">
         { call DABS_sp_UpdatePatient(
                 #{patientId, mode=IN, jdbcType=INTEGER},
-                #{fullName,  mode=IN, jdbcType=VARCHAR}
+                #{fullName,  mode=IN, jdbcType=VARCHAR},
+                #{phone,     mode=IN, jdbcType=VARCHAR}
                ) }
     </update>
+
 
     <!-- SP: DABS_sp_DeletePatientSoft(patientId) -->
     <update id="deletePatientSoft"
@@ -73,5 +75,13 @@
                 #{patientId, mode=IN, jdbcType=INTEGER}
                ) }
     </update>
+    <resultMap id="PatientActivationMap" type="com.example.cabs.dto.PatientActivationDto">
+        <result property="userId" column="UserId"/>
+        <result property="patientId" column="PatientId"/>
+        <result property="email" column="Email"/>
+        <result property="fullName" column="FullName"/>
+        <result property="createdAt" column="CreatedAt"/>
+    </resultMap>
+
 
 </mapper>

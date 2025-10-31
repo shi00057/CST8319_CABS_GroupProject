@@ -126,18 +126,42 @@ public class PatientPageController {
     @GetMapping("/profile")
     public String profilePage(Model model, Authentication auth) {
         model.addAttribute("username", auth != null ? auth.getName() : "Patient");
-        model.addAttribute("profile", null);
+        Integer uid = userId(auth);
+        Integer pid = (uid == null) ? null : patientService.getPatientIdByUserId(uid);
+        if (pid != null) {
+            var p = patientService.getPatientById(pid);
+            model.addAttribute("profile", p);
+            model.addAttribute("email", extractEmail(auth));
+        } else {
+            model.addAttribute("profile", new com.example.cabs.domain.Patient());
+            model.addAttribute("email", auth != null ? auth.getName() : "");
+        }
         return "patient/profile";
     }
 
     @PostMapping("/profile")
-    public String updateProfileViaForm(@ModelAttribute PatientUpdateRequest request,
+    public String updateProfileViaForm(@ModelAttribute com.example.cabs.dto.PatientUpdateRequest request,
                                        Authentication auth,
                                        RedirectAttributes ra) {
+        Integer uid = userId(auth);
+        Integer pid = (uid == null) ? null : patientService.getPatientIdByUserId(uid);
+        if (request.getPatientId() == null) {
+            request.setPatientId(pid);
+        }
         patientService.updatePatient(request);
         ra.addFlashAttribute("message", "Profile updated.");
         return "redirect:/patient/profile";
     }
+
+    private String extractEmail(Authentication auth) {
+        if (auth == null) return "";
+        Object p = auth.getPrincipal();
+        if (p instanceof com.example.cabs.domain.User u) {
+            return u.getEmail();
+        }
+        return auth.getName();
+    }
+
 
     @GetMapping("/notifications")
     public String notificationsPage(@RequestParam(required = false) Boolean onlyUnread,

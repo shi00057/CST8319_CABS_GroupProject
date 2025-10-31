@@ -6,7 +6,6 @@
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-
 <main class="layout">
     <div th:replace="~{doctor/_sidebar :: doctorSidebar('profile')}"></div>
 
@@ -18,9 +17,11 @@
 
         <div class="card">
             <form th:action="@{/doctor/profile}" th:object="${doctor}" method="post" class="form-grid">
+                <input type="hidden" th:field="*{doctorId}"/>
+
                 <div>
-                    <label for="fullName">Full Name</label>
-                    <input id="fullName" th:field="*{fullName}" type="text" required>
+                    <label for="name">Full Name</label>
+                    <input id="name" th:field="*{name}" type="text" required>
                 </div>
                 <div>
                     <label for="email">Email</label>
@@ -33,10 +34,6 @@
                 <div>
                     <label for="specialty">Specialty</label>
                     <input id="specialty" th:field="*{specialty}" type="text">
-                </div>
-                <div class="col-span-2">
-                    <label for="bio">Bio</label>
-                    <textarea id="bio" th:field="*{bio}" rows="4" placeholder="Short introduction"></textarea>
                 </div>
 
                 <div class="form-actions col-span-2">

@@ -49,4 +49,8 @@ public interface AppointmentMapper {
     void cancelAppointmentByDoctor(@Param("apptId") Long apptId,
                                    @Param("doctorId") Integer doctorId,
                                    @Param("byUserId") Integer byUserId);
+
+    void cancelAppointmentByAdmin(@Param("p_ApptId") Long apptId,
+                                  @Param("p_AdminUserId") Integer adminUserId,
+                                  @Param("p_Reason") String reason);
 }

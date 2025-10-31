@@ -36,9 +36,10 @@ public class PatientRepositoryImpl {
         return mapper.activateUser(userId, isActive);
     }
 
-    public int updatePatient(Integer patientId, String fullName) {
-        return mapper.updatePatient(patientId, fullName);
+    public int updatePatient(Integer patientId, String fullName, String phone) {
+        return mapper.updatePatient(patientId, fullName, phone);
     }
+
 
     public int deletePatientSoft(Integer patientId) {
         return mapper.deletePatientSoft(patientId);
