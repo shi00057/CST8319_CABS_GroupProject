@@ -99,19 +99,39 @@ public class PatientPageController {
         return "redirect:/patient/appointments-page";
     }
 
+//    @GetMapping("/appointments-page")
+//    public String appointmentsPage(@RequestParam(required = false) Integer doctorId,
+//                                   @RequestParam(required = false) Integer patientId,
+//                                   @RequestParam(required = false)
+//                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc,
+//                                   Model model, Authentication auth) {
+//        model.addAttribute("username", auth != null ? auth.getName() : "Patient");
+//        if (fromUtc == null) fromUtc = LocalDateTime.now().minusDays(30);
+//        Integer effectivePatientId = patientId;
+//        List<AppointmentDto> items = appointmentService.listAppointments(doctorId, effectivePatientId, fromUtc);
+//        model.addAttribute("appointments", items);
+//        return "patient/appointments";
+//    }
     @GetMapping("/appointments-page")
-    public String appointmentsPage(@RequestParam(required = false) Integer doctorId,
-                                   @RequestParam(required = false) Integer patientId,
-                                   @RequestParam(required = false)
-                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc,
-                                   Model model, Authentication auth) {
+    public String appointmentsPage(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc,
+            Model model,
+            Authentication auth) {
+
         model.addAttribute("username", auth != null ? auth.getName() : "Patient");
         if (fromUtc == null) fromUtc = LocalDateTime.now().minusDays(30);
-        Integer effectivePatientId = patientId;
-        List<AppointmentDto> items = appointmentService.listAppointments(doctorId, effectivePatientId, fromUtc);
+
+        Integer uid = userId(auth);
+        Integer pid = (uid == null) ? null : patientService.getPatientIdByUserId(uid);
+        List<AppointmentDto> items = (pid == null)
+                ? List.of()
+                : appointmentService.listAppointmentsByPatient(pid, fromUtc);
+
         model.addAttribute("appointments", items);
         return "patient/appointments";
     }
+
 
     @PostMapping("/cancel-form")
     public String cancelViaForm(@RequestParam Long apptId,

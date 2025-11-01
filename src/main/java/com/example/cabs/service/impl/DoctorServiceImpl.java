@@ -8,7 +8,7 @@ import com.example.cabs.repository.impl.DoctorSelfRepositoryImpl;
 import com.example.cabs.service.DoctorService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.example.cabs.common.util.PasswordCrypto;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.SecureRandom;
@@ -39,8 +39,13 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     @Transactional
     public void createDoctor(AdminCreateDoctorRequest request) {
-        byte[] salt = generateSalt(32);
-        byte[] hash = pbkdf2(request.getPassword(), salt, 120000, 256);
+
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password is required.");
+        }
+        byte[] salt = PasswordCrypto.generateSalt(16);
+        byte[] hash = PasswordCrypto.mysqlHash(salt, request.getPassword());
+
         boolean active = request.getIsActive() == null ? true : request.getIsActive();
         adminRepo.createDoctorFull(
                 request.getEmail().trim(),
@@ -52,6 +57,7 @@ public class DoctorServiceImpl implements DoctorService {
                 active
         );
     }
+
 
     @Override
     @Transactional

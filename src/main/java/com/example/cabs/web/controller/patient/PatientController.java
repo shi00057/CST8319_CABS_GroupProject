@@ -8,7 +8,7 @@ import com.example.cabs.service.PatientService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.example.cabs.repository.UserLookupMapper;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -18,10 +18,14 @@ import java.util.List;
 public class PatientController {
     private final PatientService patientService;
     private final AppointmentService appointmentService;
+    private final UserLookupMapper userLookupMapper;
 
-    public PatientController(PatientService patientService, AppointmentService appointmentService) {
+    public PatientController(PatientService patientService,
+                             AppointmentService appointmentService,
+                             UserLookupMapper userLookupMapper) {
         this.patientService = patientService;
         this.appointmentService = appointmentService;
+        this.userLookupMapper = userLookupMapper;
     }
 
     @PostMapping("/register")
@@ -30,17 +34,17 @@ public class PatientController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/appointments")
-    public List<AppointmentDto> listAppointments(
-            @RequestParam(required = false) Integer doctorId,
-            @RequestParam(required = false) Integer patientId,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc) {
-        if (fromUtc == null) {
-            fromUtc = LocalDateTime.now().minusDays(30);
-        }
-        return appointmentService.listAppointments(doctorId, patientId, fromUtc);
-    }
+//    @GetMapping("/appointments")
+//    public List<AppointmentDto> listAppointments(
+//            @RequestParam(required = false) Integer doctorId,
+//            @RequestParam(required = false) Integer patientId,
+//            @RequestParam(required = false)
+//            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc) {
+//        if (fromUtc == null) {
+//            fromUtc = LocalDateTime.now().minusDays(30);
+//        }
+//        return appointmentService.listAppointments(doctorId, patientId, fromUtc);
+//    }
 
     @PostMapping("/book")
     public ResponseEntity<Void> book(@RequestParam Integer doctorId,
@@ -90,4 +94,29 @@ public class PatientController {
         patientService.updatePatient(request);
         return ResponseEntity.noContent().build();
     }
+    private Integer userId(org.springframework.security.core.Authentication auth) {
+        if (auth == null) return null;
+        Object p = auth.getPrincipal();
+        if (p instanceof com.example.cabs.domain.User u) {
+            Long v = u.getUserId();
+            return v == null ? null : v.intValue();
+        }
+        String login = auth.getName();
+        return userLookupMapper.findUserIdByLogin(login);
+    }
+    @GetMapping("/appointments")
+    public List<AppointmentDto> myAppointments(
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromUtc,
+            org.springframework.security.core.Authentication auth) {
+
+        if (fromUtc == null) {
+            fromUtc = LocalDateTime.now().minusDays(30);
+        }
+        Integer uid = userId(auth);
+        Integer pid = (uid == null) ? null : patientService.getPatientIdByUserId(uid);
+        return (pid == null) ? List.of() : appointmentService.listAppointmentsByPatient(pid, fromUtc);
+    }
+
+
 }

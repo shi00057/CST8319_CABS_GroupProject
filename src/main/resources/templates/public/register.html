@@ -40,8 +40,9 @@
         <div class="alert" th:if="${error}" th:text="${error}">Something went wrong.</div>
         <div class="note"  th:if="${message}" th:text="${message}">Registered successfully.</div>
 
-        <form id="registerForm" method="post" th:action="@{/patient/register/submit}">
-            <!-- CSRF (safe if enabled, ignored if disabled) -->
+        <form id="registerForm" method="post" th:action="@{/public/register/submit}">
+
+        <!-- CSRF (safe if enabled, ignored if disabled) -->
 <!--            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
             <div th:if="${_csrf != null}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
